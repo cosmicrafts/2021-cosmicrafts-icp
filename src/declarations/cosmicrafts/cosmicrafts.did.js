@@ -9,7 +9,7 @@ export const idlFactory = ({ IDL }) => {
     'checkWalletExists' : IDL.Func([UserWallet], [IDL.Bool], ['query']),
     'getAllUsers' : IDL.Func([], [IDL.Vec(Users)], ['query']),
     'getUser' : IDL.Func([UserWallet], [IDL.Opt(Users)], ['query']),
-    'saveUser' : IDL.Func([UserName, UserWallet], [Users], []),
+    'saveUser' : IDL.Func([UserName, UserWallet], [IDL.Opt(Users)], []),
   });
 };
 export const init = ({ IDL }) => { return []; };

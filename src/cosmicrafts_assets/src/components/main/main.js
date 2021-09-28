@@ -37,8 +37,8 @@ export default function MainView(props) {
         wallet: ""
     });
     const [newUser, setNewUser] = useState(false);
-    const [allUsers, setAllUsers] = useState([]);
     const [_bool, _setBool] = useState(false);
+    const [_wllCreate, _setWllCreate] = useState(false);
     const [route, setRoute] = useState('main');
     const [mnemonic, setMnemonic] = useState('');
     const [password1, setPassword1] = useState("");
@@ -119,8 +119,14 @@ export default function MainView(props) {
                 container: document.querySelector("#flashlights"),
                 animationData: Flashlights
             });
-        }, 1500);
+        }, 3000);
+        //showAllUsers();
     }, []);
+
+    const showAllUsers = async () => {
+        let _u = await cosmicrafts.getAllUsers();
+        //console.log(_u);
+    }
 
     const getParams = () => {
         var url_string = window.location.href;
@@ -128,43 +134,58 @@ export default function MainView(props) {
         return url;
     }
 
+    /// Login with IC identity
     const loginIC = async () => {
-        let c = getParams();
-        if(c.length !== 2){
-            alert("Login will be available in a moment!");
+        StoicIdentity.setup("ii").then(identity => {
+            dispatch({ type: 'createwallet', payload : {identity : identity}});
+            //props.login();
+            //props.loader(false);
+            login();
+        }).catch(e => {
+            console.log(e);
+            alert("Something went wrong while connecting to the Internet Identity. Please notify the developers to fix this issue. You can find us on twitter and discord");
+        }).finally(() => {
+            //console.log("Login Finished");
+            //console.log(principals);
+            //console.log(currentPrincipal);
+            _setBool(!_bool);
+        });
+    }
+
+    useEffect (() => {
+        if(principals[0] !== undefined && principals[0] !== null && principals[0].identity !== undefined && route !== 'maintenance'){
+            checkUser();
+        }
+    }, [_bool]);
+    
+    /// Check if wallet exists on network
+    const checkUser = async () => {
+        //console.log("Exists?", principals[0].accounts[0].address);
+        let _usr = await cosmicrafts.checkWalletExists(principals[0].accounts[0].address);
+        if(_usr === true){
+            /// check if username is defined
+            checkUsername();
         } else {
-            StoicIdentity.setup("ii").then(identity => {
-                dispatch({ type: 'createwallet', payload : {identity : identity}});
-                //props.login();
-                //props.loader(false);
-                console.log("LOGGED");
-                console.log(principals);
-                console.log(currentPrincipal);
-                login();
-                //setOpen(true)
-            }).catch(e => {
-                console.log(e);
-                alert("Something went wrong while connecting to the Internet Identity. Please notify the developers to fix this issue. You can find us on twitter and discord");
-            }).finally(() => {
-                login();
-                //setOpen(true)
-                //props.loader(false)
-                console.log("Login Finished");
-                console.log(principals);
-                console.log(currentPrincipal);
-                finishLogin();
-            });
+            /// create user
+            loadSection('nickname');
         }
     }
 
-    const finishLogin = async () => {
-        let wallet_exists = cosmicrafts.checkWalletExists(principals[currentPrincipal].identity.principal);
-            if(wallet_exists){
-                _setBool(!_bool);
-            } else {
-                loadSection('nickname');
-            }
-    }
+    /// Check if user has username
+    const checkUsername = async () => {
+        let _usr = await cosmicrafts.getUser(principals[0].accounts[0].address);
+        //console.log("Check username: ", _usr);
+        if(_usr[0] !== undefined && _usr[0].user !== undefined && _usr[0].user !== ""){
+            loadSection("logged");
+            walletChars();
+            setUsername(_usr[0].user);
+            redirectCC(_usr[0].user, principals[0].accounts[0].address);
+        } else {
+            loadSection('nickname');
+            //remove();
+            //loadSection('main');
+        }
+    };
 
     const remove = () => {
         //loader(true);
@@ -195,15 +216,18 @@ export default function MainView(props) {
             loadSection("passwords");
             setNewUser(false);
         }
-        
       };
 
     const checkUsernameAvailable = async () => {
-        let _exists = await cosmicrafts.checkUsernameAvailable(username);
-        if(_exists == true){
-            loadSection("passwords");
+        if(username.trim() !== ""){
+            let _exists = await cosmicrafts.checkUsernameAvailable(username);
+            if(_exists == true){
+                loadSection("passwords");
+            } else {
+                alert("Username not available");
+            }
         } else {
-            alert("Username not available");
+            alert("Invalid Username");
         }
     };
 
@@ -213,7 +237,14 @@ export default function MainView(props) {
             return false;
         }
         if(strongPassword.test(password1)){
-            submit();
+            if(principals[0] !== undefined && principals[0] !== null && principals[0].identity !== undefined){
+                createUser(principals[0].accounts[0].address, username);
+                walletChars();
+                loadSection("logged");
+                redirectCC(username, principals[0].accounts[0].address);
+            } else {
+                submit();
+            }
             return true;
         }
         alert("Password does not meet the minimum requirements");
@@ -228,16 +259,11 @@ export default function MainView(props) {
         StoicIdentity.setup(t, od).then(identity => {
             dispatch({ type: 'createwallet', payload : {identity : identity}});
             login();
-          }).catch(e => {
+        }).catch(e => {
             console.log(e);
-          }).finally(() => {
-            setTimeout(() => {
-              console.log("END");
-              console.log(principals);
-              console.log(currentPrincipal);
-              _setBool(!_bool);
-            }, 2000);
-          });
+        }).finally(() => {
+            _setWllCreate(!_wllCreate);
+        });
       };
 
       const login = () => {
@@ -251,7 +277,7 @@ export default function MainView(props) {
           }).catch(e => {
             setAppState(1);
           }).finally(() => {
-                console.log("FINALLY");
+            //console.log("FINALLY");
           });
         }    
       };
@@ -261,53 +287,31 @@ export default function MainView(props) {
         let _ws = _w.charAt(0) + _w.charAt(1) + _w.charAt(2) + "..." + _w.charAt(_w.length-3) + _w.charAt(_w.length-2) + _w.charAt(_w.length-1);
         setWalletShow(_ws);
     }
-
+    
     const createUser = async (wll, usr) => {
         let _usr = await cosmicrafts.saveUser(usr, wll);
-        console.log("Create User:", _usr);
-        //setUserData({user: _usr.user, wallet: _usr.wallet});
-        if(_usr.user === ""){
-            let _usr_prev = findUsernameFront(_usr.wallet);
-            _usr_prev = (_usr_prev === undefined) ? "Anonimus" : _usr_prev;
-            _usr.user = _usr_prev.user;
-        }
-        setUserData(_usr);
-        setUsername(_usr.user);
-    }
-
-    const findUsernameFront = async (wll) => {
-        let _allUsers = await cosmicrafts.getAllUsers();
-        console.log("ALL?");
-        console.log(_allUsers);
-        _allUsers.find((element) => {
-            return element.wallet === wll;
-        });
-    }
-
-    const loadAllUsers = async () => {
-        let _allUsers = await cosmicrafts.getAllUsers();
-        setAllUsers(_allUsers);
-        console.log(_allUsers);
+        console.log("Create User:", usr, wll, _usr);
     }
     
-    useEffect (() => {
-        if(principals[0] !== undefined && principals[0] !== null && principals[0].identity !== undefined && section != 'maintenance'){
-            loadSection("logged");
-            createUser(principals[0].accounts[0].address, username);
-            walletChars();
-            redirectCC(username, principals[0].accounts[0].address);
-        }
-    }, [_bool]);
-
     const redirectCC = (usr, wll) => {
+        //console.log("Redirect:", usr, wll);
         setTimeout(()=>{
             window.location.href = "http://cosmicrafts.com?usr=" + usr + "&wlt=" + wll;
         }, 15000);
     }
 
     useEffect (() => {
-        console.log("user data:", userData);
+        //console.log("user data:", userData);
     }, [userData]);
+
+    useEffect (() => {
+        if(principals[0] !== undefined && principals[0] !== null && principals[0].identity !== undefined && route !== 'maintenance' && username !== ""){
+            createUser(principals[0].accounts[0].address, username);
+            walletChars();
+            loadSection("logged");
+            redirectCC(username, principals[0].accounts[0].address);
+        }
+    }, [_wllCreate]);
 
     return (
         <div>
@@ -451,7 +455,7 @@ export default function MainView(props) {
                                 <input className="midpanel-wallet-password-input" placeholder="Enter password *" type="password" value={password1} onChange={(ev) => { setPassword1(ev.target.value); }} />
                                 <input className="midpanel-wallet-password-input-confirm" placeholder="Confrim password *" type="password" value={password2} onChange={(ev) => { setPassword2(ev.target.value); }} />
                                 <img className="midpanel-wallet-btn-back" alt="" src={btn_cancel} onClick={() => { loadSection('tips'); }} />
-                                <img className="midpanel-wallet-btn-continue" alt="" src={btn_finish} onClick={() => { console.log(validatePassword()); }} />
+                                <img className="midpanel-wallet-btn-continue" alt="" src={btn_finish} onClick={() => { validatePassword(); }} />
                                 
                             </div>
                         );
@@ -460,7 +464,7 @@ export default function MainView(props) {
                         return (
                                 <div className="midpanel-capsule">
                                     <img className="midpanel-connect-bkg" src={logged_panel} alt="" />
-                                    <label className="midpanel-user-name-account">{userData.user}</label>
+                                    <label className="midpanel-user-name-account">{username}</label>
                                     <label className="midpanel-user-wallet-account" title="Copy to clipboard" onClick={() => {navigator.clipboard.writeText(principals[0].accounts[0].address); remove(); } }>{walletShow}</label>
                                 </div>
                             );

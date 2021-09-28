@@ -12,5 +12,5 @@ service : {
   checkWalletExists: (UserWallet) -> (bool) query;
   getAllUsers: () -> (vec Users) query;
   getUser: (UserWallet) -> (opt Users) query;
-  saveUser: (UserName, UserWallet) -> (Users);
+  saveUser: (UserName, UserWallet) -> (opt Users);
 }

@@ -9,16 +9,18 @@ actor {
 
     stable var users : [Users] = [];
 
-    public func saveUser(name : UserName, wll : UserWallet) : async Users {
+    public func saveUser(name : UserName, wll : UserWallet) : async ?Users {
         let usr : Users = {user = name; wallet = wll};
         let _usr : ?Users = get_wallet(usr);
         switch(_usr){
             case null{
-                users := Array.append<Users>(users, [usr]);
-                return usr;
+                if(name != ""){
+                    users := Array.append<Users>(users, [usr]);
+                };
+                return _usr;
             };
             case (?_) {
-                return usr;
+                return _usr;
             };
         }
     };

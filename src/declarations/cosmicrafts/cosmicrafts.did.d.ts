@@ -9,5 +9,5 @@ export interface _SERVICE {
   'checkWalletExists' : (arg_0: UserWallet) => Promise<boolean>,
   'getAllUsers' : () => Promise<Array<Users>>,
   'getUser' : (arg_0: UserWallet) => Promise<[] | [Users]>,
-  'saveUser' : (arg_0: UserName, arg_1: UserWallet) => Promise<Users>,
+  'saveUser' : (arg_0: UserName, arg_1: UserWallet) => Promise<[] | [Users]>,
 }
