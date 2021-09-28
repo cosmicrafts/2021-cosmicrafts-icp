@@ -39,7 +39,7 @@ export default function MainView(props) {
     const [newUser, setNewUser] = useState(false);
     const [allUsers, setAllUsers] = useState([]);
     const [_bool, _setBool] = useState(false);
-    const [route, setRoute] = useState('maintenance');
+    const [route, setRoute] = useState('main');
     const [mnemonic, setMnemonic] = useState('');
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
@@ -120,41 +120,41 @@ export default function MainView(props) {
                 animationData: Flashlights
             });
         }, 1500);
-        let c = getParams();
-        if(c.length === 2){
-            setRoute('main');
-        }
     }, []);
 
     const getParams = () => {
         var url_string = window.location.href;
         var url = url_string.split("?");
-        console.log("PARAMS", url);
         return url;
     }
 
     const loginIC = async () => {
-        StoicIdentity.setup("ii").then(identity => {
-            dispatch({ type: 'createwallet', payload : {identity : identity}});
-            //props.login();
-            //props.loader(false);
-            console.log("LOGGED");
-            console.log(principals);
-            console.log(currentPrincipal);
-            login();
-            //setOpen(true)
-          }).catch(e => {
-            console.log(e);
-            alert("Something went wrong while connecting to the Internet Identity. Please notify the developers to fix this issue. You can find us on twitter and discord");
-          }).finally(() => {
-            login();
-            //setOpen(true)
-            //props.loader(false)
-            console.log("Login Finished");
-            console.log(principals);
-            console.log(currentPrincipal);
-            finishLogin();
-          });
+        let c = getParams();
+        if(c.length !== 2){
+            alert("Login will be available in a moment!");
+        } else {
+            StoicIdentity.setup("ii").then(identity => {
+                dispatch({ type: 'createwallet', payload : {identity : identity}});
+                //props.login();
+                //props.loader(false);
+                console.log("LOGGED");
+                console.log(principals);
+                console.log(currentPrincipal);
+                login();
+                //setOpen(true)
+            }).catch(e => {
+                console.log(e);
+                alert("Something went wrong while connecting to the Internet Identity. Please notify the developers to fix this issue. You can find us on twitter and discord");
+            }).finally(() => {
+                login();
+                //setOpen(true)
+                //props.loader(false)
+                console.log("Login Finished");
+                console.log(principals);
+                console.log(currentPrincipal);
+                finishLogin();
+            });
+        }
     }
 
     const finishLogin = async () => {
