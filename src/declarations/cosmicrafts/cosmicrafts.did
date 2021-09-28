@@ -1,0 +1,16 @@
+type Users = 
+ record {
+   user: UserName__1;
+   wallet: UserWallet__1;
+ };
+type UserWallet__1 = text;
+type UserWallet = text;
+type UserName__1 = text;
+type UserName = text;
+service : {
+  checkUsernameAvailable: (UserName) -> (bool) query;
+  checkWalletExists: (UserWallet) -> (bool) query;
+  getAllUsers: () -> (vec Users) query;
+  getUser: (UserWallet) -> (opt Users) query;
+  saveUser: (UserName, UserWallet) -> (Users);
+}

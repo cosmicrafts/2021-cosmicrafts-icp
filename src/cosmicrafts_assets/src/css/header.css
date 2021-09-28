@@ -1,0 +1,453 @@
+.header-main-div{
+    display: block;
+    position: absolute;
+    z-index: 9999999;
+    width: 100%;
+    height: 150px;
+}
+/*Left*/
+.div-left-banner{
+    width: 28.75%;
+    height: 100%;
+    display: inline-block;
+    background: url('../resources/images/leftpanel.png') no-repeat;
+    background-size: contain;
+    vertical-align: top;
+    position: relative;
+    cursor: pointer;
+}
+.img-left-banner{
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+}
+.img-logo{
+    width: 20%;
+    height: auto;
+    position: absolute;
+    top: 5%;
+    left: 3%;
+}
+.text-logo{
+    width: 55%;
+    height: auto;
+    position: absolute;
+    top: 13%;
+    left: 27%;
+}
+/*Center*/
+.div-center-menu{
+    width: 52.5%;
+    height: 55%;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: -100%;
+    margin-left: -4.5%;
+    background: url('../resources/images/midpaneldesktop.png') no-repeat;
+    background-size: contain;
+}
+.panel-pc-bckg{
+    width: 103%;
+}
+.img-center-banner{
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 71px;
+    object-fit: cover;
+}
+.img-center-menu{
+    width: 10%;
+    height: 10%;
+    position: absolute;
+    top: 2px;
+    left: 45%;
+}
+.img-lbtn-menu{
+    width: 24%;
+}
+.img-lbtn-menu:hover{
+    cursor: pointer;
+    opacity: 0.75;
+    background: url('../resources/images/hlmenudesktop.png') no-repeat;
+    background-position: right bottom;
+    background-size: 70% 10%;
+}
+.txt-over-img{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.img-mbtn1-menu{
+    width: 25.5%;
+    margin-left: -0.5%;
+}
+.img-mbtn1-menu:hover{
+    cursor: pointer;
+    opacity: 0.75;
+    background: url('../resources/images/hlmenudesktop.png') no-repeat;
+    background-position: bottom;
+}
+.img-mbtn2-menu{
+    width: 25.5%;
+    margin-left: -0.5%;
+}
+.img-mbtn2-menu:hover{
+    cursor: pointer;
+    opacity: 0.75;
+    background: url('../resources/images/hlmenudesktop.png') no-repeat;
+    background-position: bottom;
+}
+.img-rbtn-menu{
+    width: 23.5%;
+    margin-left: -0.5%;
+}
+.img-rbtn-menu:hover{
+    cursor: pointer;
+    opacity: 0.75;
+    background: url('../resources/images/hlmenudesktop.png') no-repeat;
+    background-position: left bottom;
+    background-size: 70% 10%;
+}
+.txt-img{
+    position: absolute;
+    margin-left: -11%;
+    top: 15%;
+    max-width: 130px;
+}
+.txt-img-2{
+    position: absolute;
+    margin-left: -7%;
+    top: 15%;
+    max-width: 130px;
+}
+/*Right*/
+.div-right-banner{
+    width: 27.75%;
+    height: 100%;
+    background: url('../resources/images/rightpanel.png') no-repeat;
+    background-size: contain;
+    float: right;
+    vertical-align: top;
+}
+.div-user{
+    width: 20%;
+    position: absolute;
+    right: 0.5%;
+    top: 5%;
+}
+.userlogo{
+    padding: 8px;
+    top: -5px;
+}
+.img-right-banner{
+    width: 27.77%;
+    position: absolute;
+    right: 0;
+}
+.wallet-div{
+    position: absolute;
+    right: 7%;
+    width: 10%;
+    top: 15%;
+    cursor: pointer;
+}
+.wallet{
+    width: 100%;
+    height: auto;
+}
+.division-div{
+    position: absolute;
+    right: 17%;
+    width: 2px;
+    top: 10%;
+}
+.division{
+    width: 100%;
+    height: auto;
+}
+.dfinity-div{
+    position: absolute;
+    right: 18%;
+    width: 5%;
+    top: 5%;
+}
+.dfinity{
+    width: 100%;
+    height: auto;
+}
+@media(max-width: 374px){
+    /*Left*/
+    .div-left-banner{
+        width: 40%;
+    }
+    .img-logo{
+        width: 20%;
+        height: 16%;
+        top: 2%;
+    }
+    .text-logo{
+        top: 5%;
+    }
+    /*Center*/
+    .div-center-menu{
+        width: 33%;
+        height: 15%;
+        margin-left: -25px;
+        background: url('../resources/images/midpanel.png') no-repeat;
+        background-size: cover;
+    }
+    /*Right*/
+    .div-right-banner{
+        width: 40%;
+    }
+    .div-user {
+        width: 8%;
+        position: absolute;
+        right: 0.5%;
+        top: 1%;
+    }
+    .userlogo {
+        padding: 2px;
+        top: 0;
+    }
+    .div-frame-userlogo{
+        width: 35px;
+        height: 35px;
+        padding-right: 4px;
+        padding-top: 3px;
+    }
+    .img-right-banner{
+        width: 100%;
+        float: right;
+    }
+    .wallet-div{
+        top: 2%;
+        right: 10%;
+        width: 15%;
+    }
+    .division-div {
+        right: 25%;
+        width: 0.75px;
+        top: -0.5%;
+    }
+    .dfinity-div {
+        right: 27.5%;
+        width: 5%;
+        top: 0%;
+    }
+}
+@media(min-width: 375px) and (max-width: 424px){
+    /*Left*/
+    .div-left-banner{
+        width: 40%;
+    }
+    .img-logo{
+        width: 20%;
+        height: 16%;
+        top: 2%;
+    }
+    .text-logo{
+        top: 5%;
+    }
+    /*Center*/
+    .div-center-menu{
+        width: 33%;
+        height: 15%;
+        margin-left: -25px;
+        background: url('../resources/images/midpanel.png') no-repeat;
+        background-size: cover;
+    }
+    /*Right*/
+    .div-right-banner{
+        width: 40%;
+    }
+    .div-user {
+        width: 9%;
+        position: absolute;
+        right: 0.5%;
+        top: 1%;
+    }
+    .userlogo {
+        padding: 2px;
+        top: 0;
+    }
+    .div-frame-userlogo{
+        width: 35px;
+        height: 35px;
+        padding-right: 4px;
+        padding-top: 3px;
+    }
+    .img-right-banner{
+        width: 100%;
+        float: right;
+    }
+    .wallet-div{
+        top: 3%;
+        right: 10%;
+        width: 17%;
+    }
+    .division-div {
+        right: 27%;
+        width: 1px;
+        top: 1%;
+    }
+    .dfinity-div {
+        right: 29%;
+        width: 5%;
+        top: 2%;
+    }
+}
+@media(min-width: 425px) and (max-width: 767px){
+    /*Left*/
+    .div-left-banner{
+        width: 40%;
+    }
+    .img-logo{
+        width: 22%;
+        height: 40%;
+        top: 3%;
+    }
+    .text-logo{
+        top: 10%;
+        left: 30%;
+    }
+    /*Center*/
+    .div-center-menu{
+        width: 33%;
+        height: 15%;
+        margin-left: -25px;
+        background: url('../resources/images/midpanel.png') no-repeat;
+        background-size: cover;
+    }
+    /*Right*/
+    .div-right-banner{
+        width: 40%;
+    }
+    .div-user {
+        width: 9%;
+        position: absolute;
+        right: 0.5%;
+        top: 1%;
+    }
+    .userlogo {
+        padding: 6px;
+        top: -5px;
+    }
+    .div-frame-userlogo{
+        width: 35px;
+        height: 35px;
+        padding-right: 4px;
+        padding-top: 3px;
+    }
+    .img-right-banner{
+        width: 100%;
+        float: right;
+    }
+    .wallet-div{
+        top: 7%;
+        right: 10%;
+        width: 16%;
+    }
+    .division-div {
+        right: 26%;
+        width: 2px;
+        top: 4%;
+    }
+    .dfinity-div {
+        right: 28%;
+        width: 6%;
+        top: 5%;
+    }
+}
+@media(min-width: 768px) and (max-width: 1023px){
+    /*Left*/
+    .div-left-banner{
+        width: 40%;
+    }
+    .img-logo{
+        width: 22%;
+        height: 40%;
+        top: 3%;
+    }
+    .text-logo{
+        top: 10%;
+        left: 30%;
+    }
+    /*Center*/
+    .div-center-menu{
+        width: 33%;
+        height: 29%;
+        margin-left: -50px;
+        background: url('../resources/images/midpanel.png') no-repeat;
+        background-size: cover;
+    }
+    .img-center-menu {
+        height: 25%;
+    }    
+    /*Right*/
+    .div-right-banner{
+        width: 40%;
+    }
+    .div-user {
+        width: 9%;
+        position: absolute;
+        right: 0.5%;
+        top: 1%;
+    }
+    .userlogo {
+        padding: 6px;
+        top: -5px;
+    }
+    .div-frame-userlogo{
+        width: 35px;
+        height: 35px;
+        padding-right: 4px;
+        padding-top: 3px;
+    }
+    .img-right-banner{
+        width: 100%;
+        float: right;
+    }
+    .wallet-div{
+        top: 7%;
+        right: 10%;
+        width: 16%;
+    }
+    .division-div {
+        right: 26%;
+        width: 2px;
+        top: 4%;
+    }
+    .dfinity-div {
+        right: 28%;
+        width: 6%;
+        top: 5%;
+    }.txt-img{
+        max-width: 80px;
+        max-height: 15px;
+        top: 10%;
+    }
+    .txt-img-2{
+        max-width: 80px;
+        max-height: 15px;
+        top: 10%;
+    }
+}
+@media (min-width: 1024px) and (max-width: 1439px){
+    .txt-img{
+        max-width: 100px;
+        max-height: 15px;
+        top: 10%;
+    }
+    .txt-img-2{
+        max-width: 100px;
+        max-height: 15px;
+        top: 10%;
+    }
+}

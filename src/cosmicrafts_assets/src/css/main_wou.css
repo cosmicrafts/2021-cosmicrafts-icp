@@ -1,0 +1,15 @@
+html{
+    background: url('../resources/images/wou/main_bkg_desk.png') no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    overflow: hidden;
+}
+@media (max-width: 767px) {
+    html{
+        background: url('../resources/images/wou/main_bkg_mob.png') no-repeat fixed;
+        background-position: center center;
+        background-size: cover;
+    }
+}

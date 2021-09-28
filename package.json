@@ -2,7 +2,12 @@
   "name": "cosmicrafts_assets",
   "version": "0.1.0",
   "description": "Internet Computer starter application",
-  "keywords": ["Internet Computer", "Motoko", "JavaScript", "Canister"],
+  "keywords": [
+    "Internet Computer",
+    "Motoko",
+    "JavaScript",
+    "Canister"
+  ],
   "scripts": {
     "build": "webpack",
     "prebuild": "npm run copy:types",
@@ -11,26 +16,61 @@
     "copy:types": "rsync -avr .dfx/$(echo ${DFX_NETWORK:-'**'})/canisters/** --exclude='assets/' --exclude='idl/' --exclude='*.wasm' --delete src/declarations"
   },
   "devDependencies": {
-    "@dfinity/agent": "0.10.0",
+    "@dfinity/agent": "^0.8.9",
+    "@dfinity/auth-client": "^0.8.9",
     "@dfinity/candid": "0.10.0",
+    "@dfinity/identity": "^0.8.9",
     "@dfinity/principal": "0.10.0",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
+    "@toruslabs/openlogin": "^0.9.0",
     "assert": "2.0.0",
+    "axios": "^0.21.1",
+    "bigint-conversion": "^2.1.12",
+    "bip39": "^3.0.4",
+    "bootstrap": "^5.1.0",
     "buffer": "6.0.3",
     "copy-webpack-plugin": "^9.0.1",
+    "crypto-js": "3.1.9-1",
+    "css-loader": "^6.3.0",
+    "ethereum-blockies-base64": "^1.0.2",
     "events": "3.3.0",
+    "file-loader": "^6.2.0",
     "html-webpack-plugin": "5.3.1",
+    "json-bigint": "^1.0.0",
     "process": "0.11.10",
+    "sjcl": "^1.0.8",
+    "starkbank-ecdsa": "^1.1.2",
     "stream-browserify": "3.0.0",
+    "style-loader": "^3.3.0",
+    "svg-inline-loader": "^0.8.2",
     "terser-webpack-plugin": "5.1.1",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.4.3",
+    "use-file-picker": "^1.3.0",
     "util": "0.12.3",
+    "webpack": "5.24.4",
     "webpack-cli": "4.5.0",
     "webpack-dev-server": "^3.11.2",
-    "webpack": "5.24.4"
+    "lottie-web": "^5.7.13"
+  },
+  "browser": {
+    "crypto": false,
+    "fs": false
   },
   "browserslist": [
     "last 2 chrome version",
     "last 2 firefox version",
     "last 2 safari version",
     "last 2 edge version"
-  ]
+  ],
+  "dependencies": {
+    "crypto-browserify": "^3.12.0",
+    "history": "^5.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-redux": "^7.2.4",
+    "react-router-dom": "^5.3.0"
+  }
 }

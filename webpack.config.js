@@ -45,7 +45,7 @@ module.exports = {
   entry: {
     // The frontend.entrypoint points to the HTML file for this build, so we need
     // to replace the extension to `.js`.
-    index: path.join(__dirname, asset_entry).replace(/\.html$/, ".js"),
+    index: path.join(__dirname, asset_entry).replace(/\.html$/, ".jsx"),
   },
   devtool: isDevelopment ? "source-map" : false,
   optimization: {
@@ -60,11 +60,13 @@ module.exports = {
       events: require.resolve("events/"),
       stream: require.resolve("stream-browserify/"),
       util: require.resolve("util/"),
+      crypto: require.resolve("crypto-browserify"),
+      fs: false
     },
   },
   output: {
     filename: "index.js",
-    path: path.join(__dirname, "dist", "cosmicrafts_assets"),
+    path: path.join(__dirname, "dist", "cosmicrafts_assets")
   },
 
   // Depending in the language or framework you are using for
@@ -72,12 +74,14 @@ module.exports = {
   // webpack configuration. For example, if you are using React
   // modules and CSS as described in the "Adding a stylesheet"
   // tutorial, uncomment the following lines:
-  // module: {
-  //  rules: [
-  //    { test: /\.(ts|tsx|jsx)$/, loader: "ts-loader" },
-  //    { test: /\.css$/, use: ['style-loader','css-loader'] }
-  //  ]
-  // },
+   module: {
+    rules: [
+      { test: /\.ts$|tsx$|js$|jsx$/, loader: "ts-loader" },
+      { test: /\.css$/, use: ['style-loader','css-loader'] },
+      { test: /\.svg$/, loader: 'svg-inline-loader' },
+      { test: /\.(png|jpe?g|gif)$/i, use: [{loader: 'file-loader', options:{ esModule: false } } ] }
+    ]
+   },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, asset_entry),
