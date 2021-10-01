@@ -1,4 +1,16 @@
 import type { Principal } from '@dfinity/principal';
+export type HeaderField = [string, string];
+export interface HttpRequest {
+  'url' : string,
+  'method' : string,
+  'body' : Array<number>,
+  'headers' : Array<HeaderField>,
+}
+export interface HttpResponse {
+  'body' : Array<number>,
+  'headers' : Array<HeaderField>,
+  'status_code' : number,
+}
 export type UserName = string;
 export type UserName__1 = string;
 export type UserWallet = string;
@@ -9,5 +21,6 @@ export interface _SERVICE {
   'checkWalletExists' : (arg_0: UserWallet) => Promise<boolean>,
   'getAllUsers' : () => Promise<Array<Users>>,
   'getUser' : (arg_0: UserWallet) => Promise<[] | [Users]>,
+  'http_request' : (arg_0: HttpRequest) => Promise<HttpResponse>,
   'saveUser' : (arg_0: UserName, arg_1: UserWallet) => Promise<[] | [Users]>,
 }

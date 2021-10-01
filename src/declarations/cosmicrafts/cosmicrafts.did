@@ -7,10 +7,29 @@ type UserWallet__1 = text;
 type UserWallet = text;
 type UserName__1 = text;
 type UserName = text;
+type HttpResponse = 
+ record {
+   body: blob;
+   headers: vec HeaderField;
+   status_code: nat16;
+ };
+type HttpRequest = 
+ record {
+   body: blob;
+   headers: vec HeaderField;
+   method: text;
+   url: text;
+ };
+type HeaderField = 
+ record {
+   text;
+   text;
+ };
 service : {
   checkUsernameAvailable: (UserName) -> (bool) query;
   checkWalletExists: (UserWallet) -> (bool) query;
   getAllUsers: () -> (vec Users) query;
   getUser: (UserWallet) -> (opt Users) query;
+  http_request: (HttpRequest) -> (HttpResponse) query;
   saveUser: (UserName, UserWallet) -> (opt Users);
 }

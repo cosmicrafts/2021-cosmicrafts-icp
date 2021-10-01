@@ -1,6 +1,10 @@
 import Types "./types";
 import Array "mo:base/Array";
 
+import Blob "mo:base/Blob";
+import Debug "mo:base/Debug";
+import Text "mo:base/Text";
+
 actor {
     type Users = Types.Users;
     type UserId = Types.UserId;
@@ -67,6 +71,33 @@ actor {
 
     func get_wallet(usr: Users) : ?Users {
         Array.find<Users>(users, func x {x.wallet == usr.wallet});
+    };
+
+
+
+    //// HTTP
+    type HeaderField = (Text, Text);
+
+    type HttpRequest = {
+        method: Text;
+        url: Text;
+        headers: [HeaderField];
+        body: Blob;
+    };
+
+    type HttpResponse = {
+        status_code: Nat16;
+        headers: [HeaderField];
+        body: Blob;
+    };
+
+    public query func http_request(request: HttpRequest): async HttpResponse {
+        Debug.print("Woah, it works!!");
+        return {
+            status_code = 200;
+            headers = [("Content-Type", "text/html")];
+            body = Text.encodeUtf8("<b>Hello World!</b>");
+        };
     };
 
 };
