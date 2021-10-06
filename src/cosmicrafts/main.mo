@@ -4,6 +4,7 @@ import Array "mo:base/Array";
 import Blob "mo:base/Blob";
 import Debug "mo:base/Debug";
 import Text "mo:base/Text";
+import Int "mo:base/Int";
 
 actor {
     type Users = Types.Users;
@@ -12,6 +13,7 @@ actor {
     type UserWallet = Types.UserWallet;
 
     stable var users : [Users] = [];
+    stable var counter : Int = 0;
 
     public func saveUser(name : UserName, wll : UserWallet) : async ?Users {
         let usr : Users = {user = name; wallet = wll};
@@ -93,11 +95,24 @@ actor {
 
     public query func http_request(request: HttpRequest): async HttpResponse {
         Debug.print("Woah, it works!!");
+        counter += 1;
         return {
             status_code = 200;
             headers = [("Content-Type", "text/html")];
-            body = Text.encodeUtf8("<b>Hello World!</b>");
+            body = Text.encodeUtf8("Calls: " # Int.toText(counter));
         };
     };
+
+    public shared func http_update(request: HttpRequest): async HttpResponse {
+        Debug.print("Woah, it works!!");
+        counter += 1;
+        return {
+            status_code = 200;
+            headers = [("Content-Type", "text/html")];
+            body = Text.encodeUtf8("Calls: " # Int.toText(counter));
+        };
+    };
+
+    
 
 };

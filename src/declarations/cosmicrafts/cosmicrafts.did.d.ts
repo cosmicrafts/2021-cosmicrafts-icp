@@ -22,5 +22,6 @@ export interface _SERVICE {
   'getAllUsers' : () => Promise<Array<Users>>,
   'getUser' : (arg_0: UserWallet) => Promise<[] | [Users]>,
   'http_request' : (arg_0: HttpRequest) => Promise<HttpResponse>,
+  'http_update' : (arg_0: HttpRequest) => Promise<HttpResponse>,
   'saveUser' : (arg_0: UserName, arg_1: UserWallet) => Promise<[] | [Users]>,
 }

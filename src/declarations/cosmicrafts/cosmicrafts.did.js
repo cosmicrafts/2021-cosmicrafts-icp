@@ -22,6 +22,7 @@ export const idlFactory = ({ IDL }) => {
     'getAllUsers' : IDL.Func([], [IDL.Vec(Users)], ['query']),
     'getUser' : IDL.Func([UserWallet], [IDL.Opt(Users)], ['query']),
     'http_request' : IDL.Func([HttpRequest], [HttpResponse], ['query']),
+    'http_update' : IDL.Func([HttpRequest], [HttpResponse], []),
     'saveUser' : IDL.Func([UserName, UserWallet], [IDL.Opt(Users)], []),
   });
 };

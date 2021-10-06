@@ -31,5 +31,6 @@ service : {
   getAllUsers: () -> (vec Users) query;
   getUser: (UserWallet) -> (opt Users) query;
   http_request: (HttpRequest) -> (HttpResponse) query;
+  http_update: (HttpRequest) -> (HttpResponse);
   saveUser: (UserName, UserWallet) -> (opt Users);
 }

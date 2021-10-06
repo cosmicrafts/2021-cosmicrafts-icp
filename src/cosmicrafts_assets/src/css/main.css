@@ -404,7 +404,7 @@ html{
         width: 100%;
         height: 100%;
         text-align: center;
-        padding-top: 30%;
+        top: 15%;
     }
     .midpanel {
         width: 60%;
@@ -418,20 +418,20 @@ html{
     .midpanel-connect-txt {
         position: absolute;
         left: 20%;
-        margin-top: 205px;
+        margin-top: 55%;
         width: 60%;
     }
     .midpanel-connect-btn {
         position: absolute;
         cursor: pointer;
         left: 38%;
-        margin-top: 270px;
+        margin-top: 72%;
         width: 25%;
     }
     .midpanel-create-wallet-label {
         position: absolute;
-        left: 34%;
-        top: 350px;
+        left: 31%;
+        top: 355px;
         color: #FFF;
         font-size: 13px;
     }
@@ -506,14 +506,14 @@ html{
     .midpanel-connect-txt {
         position: absolute;
         left: 20%;
-        margin-top: 235px;
+        margin-top: 55%;
         width: 60%;
     }
     .midpanel-connect-btn {
         position: absolute;
         cursor: pointer;
         left: 37.5%;
-        margin-top: 310px;
+        margin-top: 73%;
         width: 25%;
     }
     .midpanel-create-wallet-label {
@@ -747,5 +747,31 @@ html{
     }
     .midpanel{
         width: 25%;
+    }
+    .midpanel-connect-bkg {
+        position: absolute;
+        left: 22%;
+        margin-top: 0px;
+        width: 60%;
+    }
+    .midpanel-connect-txt {
+        position: absolute;
+        left: calc(15% + 135px);
+        margin-top: 505px;
+        width: 50%;
+    }
+    .midpanel-connect-btn {
+        position: absolute;
+        cursor: pointer;
+        left: calc(28% + 135px);
+        margin-top: 63%;
+        width: 22%;
+    }
+    .midpanel-create-wallet-label {
+        position: absolute;
+        left: calc(26% + 125px);
+        top: 855px;
+        color: #FFF;
+        font-size: 32px;
     }
 }
