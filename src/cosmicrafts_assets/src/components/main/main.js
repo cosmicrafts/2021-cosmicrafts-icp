@@ -4,6 +4,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../css/main.css';
 import Header from "../header/header";
 import Lottie from "lottie-web";
+import { NavLink } from 'react-router-dom';
+
+import { idlFactory } from "../../../../declarations/cosmicrafts/cosmicrafts.did.js";
+import { HttpAgent } from "@dfinity/agent";
+import { Actor } from "@dfinity/agent";
+import { canisterId } from "../../../../declarations/cosmicrafts/index.js";
 
 import { cosmicrafts } from "../../../../declarations/cosmicrafts";
 
@@ -49,6 +55,7 @@ export default function MainView(props) {
     const [walletShow, setWalletShow] = useState("");
     const [username, setUsername] = useState("");
     const dispatch = useDispatch();
+    const [isRegistering, setIsRegistering] = useState(false);
     const [texts, setTexts] = useState({
         tips: {
             title: "Security tips",
@@ -101,53 +108,38 @@ export default function MainView(props) {
     const [newMnemonic, setNewMnemonic] = useState("something went wrong");
     const strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})');
 
+    const goTo = (_section) => {
+        window.location.href = "/" + _section;
+    }
+
     useEffect (() => {
-        setTimeout(() => {
-            Lottie.loadAnimation({
-                container: document.querySelector("#ship-left"),
-                animationData: shipLeft
-            });
-            Lottie.loadAnimation({
-                container: document.querySelector("#planet"),
-                animationData: ap320
-            });
-            Lottie.loadAnimation({
-                container: document.querySelector("#ship-right"),
-                animationData: shipRight
-            });
-            Lottie.loadAnimation({
-                container: document.querySelector("#flashlights"),
-                animationData: Flashlights
-            });
-        }, 3000);
-        //showAllUsers();
+        Lottie.loadAnimation({
+            container: document.querySelector("#ship-left"),
+            animationData: shipLeft
+        }).setSpeed(0.5);
+        Lottie.loadAnimation({
+            container: document.querySelector("#planet"),
+            animationData: ap320
+        }).setSpeed(0.3);
+        Lottie.loadAnimation({
+            container: document.querySelector("#ship-right"),
+            animationData: shipRight
+        }).setSpeed(0.5);
+        Lottie.loadAnimation({
+            container: document.querySelector("#flashlights"),
+            animationData: Flashlights
+        }).setSpeed(0.4);
     }, []);
-
-    const showAllUsers = async () => {
-        let _u = await cosmicrafts.getAllUsers();
-        //console.log(_u);
-    }
-
-    const getParams = () => {
-        var url_string = window.location.href;
-        var url = url_string.split("?");
-        return url;
-    }
 
     /// Login with IC identity
     const loginIC = async () => {
         StoicIdentity.setup("ii").then(identity => {
             dispatch({ type: 'createwallet', payload : {identity : identity}});
-            //props.login();
-            //props.loader(false);
             login();
         }).catch(e => {
             console.log(e);
             alert("Something went wrong while connecting to the Internet Identity. Please notify the developers to fix this issue. You can find us on twitter and discord");
         }).finally(() => {
-            //console.log("Login Finished");
-            //console.log(principals);
-            //console.log(currentPrincipal);
             _setBool(!_bool);
         });
     }
@@ -160,8 +152,7 @@ export default function MainView(props) {
     
     /// Check if wallet exists on network
     const checkUser = async () => {
-        //console.log("Exists?", principals[0].accounts[0].address);
-        let _usr = await cosmicrafts.checkWalletExists(principals[0].accounts[0].address);
+        let _usr = await cosmicrafts.checkWalletExists(principals[currentPrincipal].identity.principal);
         if(_usr === true){
             /// check if username is defined
             checkUsername();
@@ -173,30 +164,25 @@ export default function MainView(props) {
 
     /// Check if user has username
     const checkUsername = async () => {
-        let _usr = await cosmicrafts.getUser(principals[0].accounts[0].address);
-        //console.log("Check username: ", _usr);
+        let _usr = await cosmicrafts.getUser(principals[currentPrincipal].identity.principal);
         if(_usr[0] !== undefined && _usr[0].user !== undefined && _usr[0].user !== ""){
             loadSection("logged");
             walletChars();
             setUsername(_usr[0].user);
-            redirectCC(_usr[0].user, principals[0].accounts[0].address);
+            redirectCC();
         } else {
             loadSection('nickname');
-            //remove();
-            //loadSection('main');
         }
     };
 
     const remove = () => {
-        //loader(true);
         StoicIdentity.clear(principals[currentPrincipal].identity).then(r => {
           setAppState(0);
-          //loader(false);
           setTimeout(() => {
             dispatch({ type: 'removewallet'})
-          }, 1000);//hack in timeout to clear views...
+          }, 1000);
         })
-      };
+    };
 
     const loadSection = (section) => {
         setRoute(section);
@@ -216,7 +202,7 @@ export default function MainView(props) {
             loadSection("passwords");
             setNewUser(false);
         }
-      };
+    };
 
     const checkUsernameAvailable = async () => {
         if(username.trim() !== ""){
@@ -238,10 +224,10 @@ export default function MainView(props) {
         }
         if(strongPassword.test(password1)){
             if(principals[0] !== undefined && principals[0] !== null && principals[0].identity !== undefined){
-                createUser(principals[0].accounts[0].address, username);
+                createUser(principals[currentPrincipal].identity.principal);
                 walletChars();
                 loadSection("logged");
-                redirectCC(username, principals[0].accounts[0].address);
+                redirectCC();
             } else {
                 submit();
             }
@@ -283,7 +269,9 @@ export default function MainView(props) {
       };
 
     const walletChars = () => {
-        let _w = principals[0].accounts[0].address;
+        console.log("CHART", principals[currentPrincipal].identity);
+        return false;
+        let _w  = principals[currentPrincipal].identity.principal; //principals[0].accounts[0].address;
         let _ws = _w.charAt(0) + _w.charAt(1) + _w.charAt(2) + "..." + _w.charAt(_w.length-3) + _w.charAt(_w.length-2) + _w.charAt(_w.length-1);
         setWalletShow(_ws);
     }
@@ -291,27 +279,54 @@ export default function MainView(props) {
     const createUser = async (wll, usr) => {
         let _usr = await cosmicrafts.saveUser(usr, wll);
         console.log("Create User:", usr, wll, _usr);
+        let ourPlayer = { stoic: principals[0].identity.principal };
+        let registration = {
+            player: ourPlayer,
+            name: usr,
+        };
+        console.log("REGISTER METASCORE", registration);
     }
     
-    const redirectCC = (usr, wll) => {
-        //console.log("Redirect:", usr, wll);
-        setTimeout(()=>{
-            window.location.href = "http://cosmicrafts.com?usr=" + usr + "&wlt=" + wll;
-        }, 15000);
+    const redirectCC = () => {
+        setTimeout( () => {
+            register();
+        }, 5000);
     }
-
-    useEffect (() => {
-        //console.log("user data:", userData);
-    }, [userData]);
 
     useEffect (() => {
         if(principals[0] !== undefined && principals[0] !== null && principals[0].identity !== undefined && route !== 'maintenance' && username !== ""){
-            createUser(principals[0].accounts[0].address, username);
+            createUser(principals[currentPrincipal].identity.principal, username);
             walletChars();
             loadSection("logged");
-            redirectCC(username, principals[0].accounts[0].address);
+            redirectCC();
         }
     }, [_wllCreate]);
+
+    /* METASCORE */
+    const register = async () => {
+        setIsRegistering(true);
+        let identity = principals[currentPrincipal].identity;
+        let myAgent = new HttpAgent({ identity });
+        if (process.env.NODE_ENV == "development") {
+          myAgent.fetchRootKey();
+        }
+        const myGameActor = Actor.createActor(idlFactory, {
+          canisterId: canisterId,
+          agent: myAgent,
+        });
+        let id = identity.principal;
+        console.log("Identity ID", id);
+        let ourPlayer = { stoic: id };
+        let registration = {
+          player: ourPlayer,
+          name: username,
+        };
+        console.log("REGISTRATION", registration);
+        goTo("game");
+
+        //myGameActor.addPlayer(registration).then((value) => console.log(value));
+        //router.push("/quizz");
+      };
 
     return (
         <div>
@@ -348,7 +363,7 @@ export default function MainView(props) {
                                 <div className="midpanel-capsule">
                                     <img className="midpanel-connect-bkg" src={cc_bkg} alt="" />
                                     <img className="midpanel-connect-txt" src={cc_txt} alt="" />
-                                    <img className="midpanel-connect-btn" src={cc_btn} alt="" onClick={() => { /*loadSection('login');*/ loginIC(); }} />
+                                    <img className="midpanel-connect-btn" src={cc_btn} alt="" onClick={() => { loginIC(); }} />
                                     <label className="midpanel-create-wallet-label">CREATE NEW <span className="midpanel-create-new-wallet-label" onClick={() => { loadSection('tips'); }}>WALLET</span></label>
                                 </div>
                             );
@@ -465,7 +480,7 @@ export default function MainView(props) {
                                 <div className="midpanel-capsule">
                                     <img className="midpanel-connect-bkg" src={logged_panel} alt="" />
                                     <label className="midpanel-user-name-account">{username}</label>
-                                    <label className="midpanel-user-wallet-account" title="Copy to clipboard" onClick={() => {navigator.clipboard.writeText(principals[0].accounts[0].address); remove(); } }>{walletShow}</label>
+                                    <label className="midpanel-user-wallet-account" title="Copy to clipboard" onClick={() => {navigator.clipboard.writeText(principals[currentPrincipal].identity.principal); remove(); } }>{walletShow}</label>
                                 </div>
                             );
 

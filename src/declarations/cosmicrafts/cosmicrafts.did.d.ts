@@ -1,27 +1,33 @@
 import type { Principal } from '@dfinity/principal';
-export type HeaderField = [string, string];
-export interface HttpRequest {
-  'url' : string,
-  'method' : string,
-  'body' : Array<number>,
-  'headers' : Array<HeaderField>,
-}
-export interface HttpResponse {
-  'body' : Array<number>,
-  'headers' : Array<HeaderField>,
-  'status_code' : number,
-}
+export type GamesPlayed = bigint;
+export type GamesWon = bigint;
+export type Highscore = bigint;
+export type Highscore__1 = bigint;
+export type Level = bigint;
+export type Score = bigint;
+export type Score__1 = bigint;
 export type UserName = string;
 export type UserName__1 = string;
 export type UserWallet = string;
 export type UserWallet__1 = string;
-export interface Users { 'user' : UserName__1, 'wallet' : UserWallet__1 }
+export interface Users {
+  'gamesPlayed' : GamesPlayed,
+  'user' : UserName__1,
+  'level' : Level,
+  'score' : Score__1,
+  'wallet' : UserWallet__1,
+  'gamesWon' : GamesWon,
+  'highscore' : Highscore__1,
+}
 export interface _SERVICE {
   'checkUsernameAvailable' : (arg_0: UserName) => Promise<boolean>,
   'checkWalletExists' : (arg_0: UserWallet) => Promise<boolean>,
   'getAllUsers' : () => Promise<Array<Users>>,
   'getUser' : (arg_0: UserWallet) => Promise<[] | [Users]>,
-  'http_request' : (arg_0: HttpRequest) => Promise<HttpResponse>,
-  'http_update' : (arg_0: HttpRequest) => Promise<HttpResponse>,
   'saveUser' : (arg_0: UserName, arg_1: UserWallet) => Promise<[] | [Users]>,
+  'saveUserScore' : (
+      arg_0: UserWallet,
+      arg_1: Score,
+      arg_2: Highscore,
+    ) => Promise<boolean>,
 }

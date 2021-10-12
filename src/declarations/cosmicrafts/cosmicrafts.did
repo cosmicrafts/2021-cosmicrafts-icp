@@ -1,5 +1,10 @@
 type Users = 
  record {
+   gamesPlayed: GamesPlayed;
+   gamesWon: GamesWon;
+   highscore: Highscore__1;
+   level: Level;
+   score: Score__1;
    user: UserName__1;
    wallet: UserWallet__1;
  };
@@ -7,30 +12,18 @@ type UserWallet__1 = text;
 type UserWallet = text;
 type UserName__1 = text;
 type UserName = text;
-type HttpResponse = 
- record {
-   body: blob;
-   headers: vec HeaderField;
-   status_code: nat16;
- };
-type HttpRequest = 
- record {
-   body: blob;
-   headers: vec HeaderField;
-   method: text;
-   url: text;
- };
-type HeaderField = 
- record {
-   text;
-   text;
- };
+type Score__1 = nat;
+type Score = nat;
+type Level = nat;
+type Highscore__1 = nat;
+type Highscore = nat;
+type GamesWon = nat;
+type GamesPlayed = nat;
 service : {
   checkUsernameAvailable: (UserName) -> (bool) query;
   checkWalletExists: (UserWallet) -> (bool) query;
   getAllUsers: () -> (vec Users) query;
   getUser: (UserWallet) -> (opt Users) query;
-  http_request: (HttpRequest) -> (HttpResponse) query;
-  http_update: (HttpRequest) -> (HttpResponse);
   saveUser: (UserName, UserWallet) -> (opt Users);
+  saveUserScore: (UserWallet, Score, Highscore) -> (bool);
 }
