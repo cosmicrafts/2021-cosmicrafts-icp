@@ -4,7 +4,7 @@ type Users =
    gamesWon: GamesWon;
    highscore: Highscore__1;
    level: Level;
-   score: Score__1;
+   score: ScoreCC__1;
    user: UserName__1;
    wallet: UserWallet__1;
  };
@@ -12,18 +12,70 @@ type UserWallet__1 = text;
 type UserWallet = text;
 type UserName__1 = text;
 type UserName = text;
-type Score__1 = nat;
-type Score = nat;
+type ScoreCC__1 = nat;
+type ScoreCC = nat;
+type Score = 
+ record {
+   Player__1;
+   nat;
+ };
+type Result = 
+ variant {
+   err: text;
+   ok;
+ };
+type RegisterCallback = func (Metadata) -> ();
+type Player__1 = 
+ variant {
+   plug: principal;
+   stoic: principal;
+ };
+type PlayerRegisterResponse = 
+ variant {
+   err: variant {
+          AlreadyExist;
+          Unknown;
+        };
+   ok;
+ };
+type PlayerRegister = 
+ record {
+   name: text;
+   player: Player;
+ };
+type PlayerInfosResponse = 
+ variant {
+   err: variant {
+          NotFound;
+          Unknown;
+        };
+   ok: text;
+ };
+type Player = 
+ variant {
+   plug: principal;
+   stoic: principal;
+ };
+type Metagame = 
+ service {
+   addPlayer: (PlayerRegister) -> (PlayerRegisterResponse);
+   checkUsernameAvailable: (UserName) -> (bool) query;
+   checkWalletExists: (UserWallet) -> (bool) query;
+   getAllUsers: () -> (vec Users) query;
+   getInfosOfPlayer: (Player) -> (PlayerInfosResponse);
+   getUser: (UserWallet) -> (opt Users) query;
+   metascoreRegisterSelf: (RegisterCallback) -> ();
+   metascoreScores: () -> (vec Score) query;
+   register: () -> (Result);
+   saveUser: (UserName, UserWallet) -> (opt Users);
+   saveUserScore: (UserWallet, ScoreCC, Highscore) -> (bool);
+   testBasic: () -> (bool);
+   testPlayer: (Player) -> (bool);
+ };
+type Metadata = record {name: text;};
 type Level = nat;
 type Highscore__1 = nat;
 type Highscore = nat;
 type GamesWon = nat;
 type GamesPlayed = nat;
-service : {
-  checkUsernameAvailable: (UserName) -> (bool) query;
-  checkWalletExists: (UserWallet) -> (bool) query;
-  getAllUsers: () -> (vec Users) query;
-  getUser: (UserWallet) -> (opt Users) query;
-  saveUser: (UserName, UserWallet) -> (opt Users);
-  saveUserScore: (UserWallet, Score, Highscore) -> (bool);
-}
+service : () -> Metagame

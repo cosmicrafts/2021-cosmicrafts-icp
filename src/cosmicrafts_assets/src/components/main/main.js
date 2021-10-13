@@ -269,8 +269,6 @@ export default function MainView(props) {
       };
 
     const walletChars = () => {
-        console.log("CHART", principals[currentPrincipal].identity);
-        return false;
         let _w  = principals[currentPrincipal].identity.principal; //principals[0].accounts[0].address;
         let _ws = _w.charAt(0) + _w.charAt(1) + _w.charAt(2) + "..." + _w.charAt(_w.length-3) + _w.charAt(_w.length-2) + _w.charAt(_w.length-1);
         setWalletShow(_ws);
@@ -278,7 +276,6 @@ export default function MainView(props) {
     
     const createUser = async (wll, usr) => {
         let _usr = await cosmicrafts.saveUser(usr, wll);
-        console.log("Create User:", usr, wll, _usr);
         let ourPlayer = { stoic: principals[0].identity.principal };
         let registration = {
             player: ourPlayer,
@@ -310,6 +307,7 @@ export default function MainView(props) {
         if (process.env.NODE_ENV == "development") {
           myAgent.fetchRootKey();
         }
+        console.log("CANISTER TO METASCORE", canisterId);
         const myGameActor = Actor.createActor(idlFactory, {
           canisterId: canisterId,
           agent: myAgent,
@@ -321,11 +319,10 @@ export default function MainView(props) {
           player: ourPlayer,
           name: username,
         };
-        console.log("REGISTRATION", registration);
-        goTo("game");
-
-        //myGameActor.addPlayer(registration).then((value) => console.log(value));
-        //router.push("/quizz");
+        console.log("REGISTRATION", registration, myGameActor);
+        myGameActor.addPlayer(registration).then((value) => console.log("value:", value));
+        window.location.href = "https://cosmicrafts.com/?usr=" + username + "&wlt=" + principals[currentPrincipal].identity.principal;
+        //goTo("game");
       };
 
     return (

@@ -18,7 +18,6 @@ const App = () => {
 
     const getAllData = async (addr) => {
         let data = await cosmicrafts.getUser(addr);
-        console.log("MOTOKO DATA", data);
         if(data.length >= 1){
             let _usr = {
                 "WalletId": principals[currentPrincipal].identity.principal,
@@ -26,7 +25,6 @@ const App = () => {
             };
             setUser(_usr);
         } else {
-            console.log("REDIRECT", data);
             window.location.href = "/";
         }
     };
@@ -37,41 +35,27 @@ const App = () => {
         if(data.length >= 1){
             let _highscore = parseInt(data[0].highscore);
             _highscore = (_highscore < score) ? score : _highscore;
-            console.log("SCORE TO SAVE", addr, score, _highscore);
             let saved = await cosmicrafts.saveUserScore(addr, score, _highscore);
             let allUsers = await cosmicrafts.getAllUsers();
-            console.log("ALL USERS:", saved, allUsers);
         } else {
-            console.log("NO USER SELECTED", data);
+            window.location.href = "/";
         }
     };
 
     unityContent.on("loaded", () => {
-        // Now we can for example hide the loading overlay.
-        console.log("Identity", principals);
         unityContent.send("Dashboard", "SetPlayerData", JSON.stringify(user));
-        console.log("sent: ", JSON.stringify(user));
         setIsLoading(false);
     });
 
     unityContent.on("SaveScore", (score) => {
-        // Now we can use the score to for example
-        // display it on our React app.
-  
-        console.log("GAME OVER!");
         saveScore(score);
-        console.log("SCORE:", score);
     });
 
     unityContent.on("progress", (progression) => {
-
-        console.log(progression);
         setProg(progression);
-
     });
 
     useEffect (() => {
-        console.log("ADDRESS", principals);
         if(principals[0] !== undefined && principals[0] !== null && principals[0].identity !== undefined){
             getAllData(principals[currentPrincipal].identity.principal);
         } else {
