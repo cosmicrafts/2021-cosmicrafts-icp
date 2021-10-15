@@ -484,7 +484,7 @@ export default function MainView(props) {
                                 <div className="midpanel-capsule">
                                     <img className="midpanel-connect-bkg" src={logged_panel} alt="" />
                                     <label className="midpanel-user-name-account">{username}</label>
-                                    <label className="midpanel-user-wallet-account" title="Copy to clipboard" onClick={() => {navigator.clipboard.writeText(principals[currentPrincipal].identity.principal); remove(); } }>{walletShow}</label>
+                                    <label className="midpanel-user-wallet-account" title="Copy to clipboard" onClick={() => {navigator.clipboard.writeText(principals[currentPrincipal].accounts[0].address); alert("Address copied to clipboard!"); } }>{walletShow}</label>
                                 </div>
                             );
 

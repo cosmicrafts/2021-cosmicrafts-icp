@@ -30,7 +30,8 @@ shared ({ caller = owner }) actor class Metagame() : async Metascore.GameInterfa
     type GamesPlayed = Types.GamesPlayed;
     type GamesWon = Types.GamesWon;
 
-    let scoreToken : Token.Token = actor("avnm2-3aaaa-aaaaj-qacba-cai");
+    let scoreToken : Token.Token = actor("avnm2-3aaaa-aaaaj-qacba-cai"); // IC
+    //let scoreToken : Token.Token = actor("ryjl3-tyaaa-aaaaa-aaaba-cai"); // Local
 
     stable var users : [Users] = [];
     stable var scoreTokenCreated : Bool = false;
