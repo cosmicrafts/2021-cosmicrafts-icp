@@ -6,13 +6,14 @@ module {
     public type UserId = Principal;
     public type UserName = Text;
     public type UserWallet = Text;
-    public type ScoreCC = Nat;
+    public type ScoreCC = Nat64;
     public type Highscore = Nat;
     public type Level = Nat;
     public type GamesPlayed = Nat;
     public type GamesWon = Nat;
 
     public type Users = {
+        id: UserId;
         user: UserName;
         wallet: UserWallet;
         score: ScoreCC;

@@ -3,6 +3,7 @@ type Users =
    gamesPlayed: GamesPlayed;
    gamesWon: GamesWon;
    highscore: Highscore__1;
+   id: UserId;
    level: Level;
    score: ScoreCC__1;
    user: UserName__1;
@@ -12,8 +13,9 @@ type UserWallet__1 = text;
 type UserWallet = text;
 type UserName__1 = text;
 type UserName = text;
-type ScoreCC__1 = nat;
-type ScoreCC = nat;
+type UserId = principal;
+type ScoreCC__1 = nat64;
+type ScoreCC = nat64;
 type Score = 
  record {
    Player__1;
@@ -60,15 +62,17 @@ type Metagame =
  service {
    addPlayer: (PlayerRegister) -> (PlayerRegisterResponse);
    checkUsernameAvailable: (UserName) -> (bool) query;
-   checkWalletExists: (UserWallet) -> (bool) query;
+   checkWalletExists: (UserWallet, text) -> (bool) query;
    getAllUsers: () -> (vec Users) query;
    getInfosOfPlayer: (Player) -> (PlayerInfosResponse);
-   getUser: (UserWallet) -> (opt Users) query;
+   getScoreTokenCreated: () -> (bool) query;
+   getUser: (UserWallet, text) -> (opt Users) query;
    metascoreRegisterSelf: (RegisterCallback) -> ();
    metascoreScores: () -> (vec Score) query;
    register: () -> (Result);
-   saveUser: (UserName, UserWallet) -> (opt Users);
-   saveUserScore: (UserWallet, ScoreCC, Highscore) -> (bool);
+   saveUser: (UserName, text, UserWallet) -> (opt Users);
+   saveUserScore: (UserWallet, text, ScoreCC, Highscore) -> (bool);
+   setScoreTokenCreated: () -> (bool);
    testBasic: () -> (bool);
    testPlayer: (Player) -> (bool);
  };

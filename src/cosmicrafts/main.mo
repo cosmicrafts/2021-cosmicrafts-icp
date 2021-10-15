@@ -17,6 +17,7 @@ import Option "mo:base/Option";
     Metascore
 *****************/
 import Metascore "mo:metascore/Metascore";
+import Token "../score_token/score_token";
 
 shared ({ caller = owner }) actor class Metagame() : async Metascore.GameInterface = self {
     type Users = Types.Users;
@@ -29,18 +30,23 @@ shared ({ caller = owner }) actor class Metagame() : async Metascore.GameInterfa
     type GamesPlayed = Types.GamesPlayed;
     type GamesWon = Types.GamesWon;
 
+    let scoreToken : Token.Token = actor("avnm2-3aaaa-aaaaj-qacba-cai");
+
     stable var users : [Users] = [];
+    stable var scoreTokenCreated : Bool = false;
     //stable var counter : Int = 0;
 
-    public func saveUser(name : UserName, wll : UserWallet) : async ?Users {
+    public func saveUser(name : UserName, uId : Text,  wll : UserWallet) : async ?Users {
+        let userId : Principal = Principal.fromText(uId);
         let usr : Users = {
-                            user = name; 
-                            wallet = wll; 
-                            score = 0; 
-                            highscore = 0;
-                            level = 0;
+                            id          = userId;
+                            user        = name; 
+                            wallet      = wll; 
+                            score       = 0; 
+                            highscore   = 0;
+                            level       = 0;
                             gamesPlayed = 0;
-                            gamesWon = 0;
+                            gamesWon    = 0;
                         };
         let _usr : ?Users = get_wallet(usr);
         switch(_usr){
@@ -60,30 +66,34 @@ shared ({ caller = owner }) actor class Metagame() : async Metascore.GameInterfa
         return users;
     };
 
-    public query func getUser(wll : UserWallet) : async ?Users {
+    public query func getUser(wll : UserWallet, uId : Text) : async ?Users {
         let name : Text = "";
+        let userId : Principal = Principal.fromText(uId);
         var usr : Users = {
-                            user = name; 
-                            wallet = wll; 
-                            score = 0; 
-                            highscore = 0;
-                            level = 0;
+                            id          = userId;
+                            user        = name; 
+                            wallet      = wll; 
+                            score       = 0; 
+                            highscore   = 0;
+                            level       = 0;
                             gamesPlayed = 0;
-                            gamesWon = 0;
+                            gamesWon    = 0;
                         };
         return get_wallet(usr);
     };
 
-    public query func checkWalletExists(wll : UserWallet) : async Bool {
+    public query func checkWalletExists(wll : UserWallet, uId : Text) : async Bool {
         let name : Text = "";
+        let userId : Principal = Principal.fromText(uId);
         let usr : Users = {
-                            user = name; 
-                            wallet = wll; 
-                            score = 0; 
-                            highscore = 0;
-                            level = 0;
+                            id          = userId;
+                            user        = name; 
+                            wallet      = wll; 
+                            score       = 0; 
+                            highscore   = 0;
+                            level       = 0;
                             gamesPlayed = 0;
-                            gamesWon = 0;
+                            gamesWon    = 0;
                         };
         switch(get_wallet(usr)){
             case null{
@@ -97,14 +107,16 @@ shared ({ caller = owner }) actor class Metagame() : async Metascore.GameInterfa
 
     public query func checkUsernameAvailable(name : UserName) : async Bool{
         let wll : Text = "";
+        let userId : Principal = Principal.fromText("vv52s-veea6-gw2ea-i7un6-uri35-6t5dx-go6cj-lfmkt-5objd-ia7if-3qe");
         let usr : Users = {
-                            user = name; 
-                            wallet = wll; 
-                            score = 0; 
-                            highscore = 0;
-                            level = 0;
+                            id          = userId;
+                            user        = name; 
+                            wallet      = wll; 
+                            score       = 0; 
+                            highscore   = 0;
+                            level       = 0;
                             gamesPlayed = 0;
-                            gamesWon = 0;
+                            gamesWon    = 0;
                         };
         switch(get_user(usr)){
             case null{
@@ -116,8 +128,10 @@ shared ({ caller = owner }) actor class Metagame() : async Metascore.GameInterfa
         }
     };
 
-    public func saveUserScore(wll: UserWallet, scr: ScoreCC, hscr: Highscore) : async Bool{
+    public func saveUserScore(wll: UserWallet, uId : Text, scr: ScoreCC, hscr: Highscore) : async Bool{
+        let userId : Principal = Principal.fromText(uId);
         let usr : Users = {
+                            id          = userId;
                             user        = "";
                             wallet      = wll; 
                             score       = 0; 
@@ -131,9 +145,11 @@ shared ({ caller = owner }) actor class Metagame() : async Metascore.GameInterfa
                 return false;
             };
             case (?actualUser) {
+                let _res : (Bool, Text) = await scoreToken.mint(wll, scr);
                 let _scr : ScoreCC = actualUser.score + scr;
                 let _gp : GamesPlayed = actualUser.gamesPlayed + 1;
                 let _u : Users = {
+                    id          = userId;
                     user        = actualUser.user;
                     wallet      = actualUser.wallet;
                     score       = _scr;
@@ -162,6 +178,15 @@ shared ({ caller = owner }) actor class Metagame() : async Metascore.GameInterfa
 
     func get_wallet(usr: Users) : ?Users {
         Array.find<Users>(users, func x {x.wallet == usr.wallet});
+    };
+
+    public query func getScoreTokenCreated() : async Bool {
+        return scoreTokenCreated;
+    };
+
+    public func setScoreTokenCreated() : async Bool {
+        scoreTokenCreated := true;
+        return scoreTokenCreated;
     };
 
 

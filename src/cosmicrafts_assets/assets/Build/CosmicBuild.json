@@ -3,14 +3,15 @@
 "productName": "Cosmicrafts",
 "productVersion": "v0.50",
 "dataUrl": "CosmicBuild.data.unityweb",
-"wasmCodeUrl": "CosmicBuild.wasm.code.unityweb",
+"wasmCodeUrl": "CosmicBuild.wasm",
 "wasmFrameworkUrl": "CosmicBuild.wasm.framework.unityweb",
 "graphicsAPI": ["WebGL 2.0","WebGL 1.0"],
 "webglContextAttributes": {"preserveDrawingBuffer": false},
+"backgroundUrl": "CosmicBuild.jpg",
 "splashScreenStyle": "Dark",
-"backgroundColor": "#231F20",
+"backgroundColor": "#FFFFFF",
 "cacheControl": {"default": "must-revalidate"},
-"developmentBuild": false,
+"developmentBuild": true,
 "multithreading": false,
 "unityVersion": "2019.2.8f1"
 }

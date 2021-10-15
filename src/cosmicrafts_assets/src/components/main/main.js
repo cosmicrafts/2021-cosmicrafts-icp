@@ -36,6 +36,7 @@ import btn_next from "../../resources/images/wallet/next_button.png";
 import btn_cancel from "../../resources/images/wallet/cancel_btn.png";
 import btn_finish from "../../resources/images/wallet/finish_btn.png";
 import logged_panel from "../../resources/images/wallet/logged_panel.png";
+import { score_token } from "../../../../declarations/score_token/index";
 
 export default function MainView(props) {
     const [userData, setUserData] = useState({
@@ -108,10 +109,6 @@ export default function MainView(props) {
     const [newMnemonic, setNewMnemonic] = useState("something went wrong");
     const strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})');
 
-    const goTo = (_section) => {
-        window.location.href = "/" + _section;
-    }
-
     useEffect (() => {
         Lottie.loadAnimation({
             container: document.querySelector("#ship-left"),
@@ -145,14 +142,14 @@ export default function MainView(props) {
     }
 
     useEffect (() => {
-        if(principals[0] !== undefined && principals[0] !== null && principals[0].identity !== undefined && route !== 'maintenance'){
+        if(principals[currentPrincipal] !== undefined && principals[currentPrincipal] !== null && principals[currentPrincipal].identity !== undefined && route !== 'maintenance'){
             checkUser();
         }
     }, [_bool]);
     
     /// Check if wallet exists on network
     const checkUser = async () => {
-        let _usr = await cosmicrafts.checkWalletExists(principals[currentPrincipal].identity.principal);
+        let _usr = await cosmicrafts.checkWalletExists(principals[currentPrincipal].accounts[0].address, principals[currentPrincipal].identity.principal);
         if(_usr === true){
             /// check if username is defined
             checkUsername();
@@ -164,7 +161,7 @@ export default function MainView(props) {
 
     /// Check if user has username
     const checkUsername = async () => {
-        let _usr = await cosmicrafts.getUser(principals[currentPrincipal].identity.principal);
+        let _usr = await cosmicrafts.getUser(principals[currentPrincipal].accounts[0].address, principals[currentPrincipal].identity.principal);
         if(_usr[0] !== undefined && _usr[0].user !== undefined && _usr[0].user !== ""){
             loadSection("logged");
             walletChars();
@@ -223,8 +220,8 @@ export default function MainView(props) {
             return false;
         }
         if(strongPassword.test(password1)){
-            if(principals[0] !== undefined && principals[0] !== null && principals[0].identity !== undefined){
-                createUser(principals[currentPrincipal].identity.principal);
+            if(principals[0] !== undefined && principals[currentPrincipal] !== null && principals[currentPrincipal].identity !== undefined){
+                createUser();
                 walletChars();
                 loadSection("logged");
                 redirectCC();
@@ -269,17 +266,18 @@ export default function MainView(props) {
       };
 
     const walletChars = () => {
-        let _w  = principals[currentPrincipal].identity.principal; //principals[0].accounts[0].address;
+        let _w  = principals[currentPrincipal].accounts[0].address; // principals[currentPrincipal].identity.principal;
         let _ws = _w.charAt(0) + _w.charAt(1) + _w.charAt(2) + "..." + _w.charAt(_w.length-3) + _w.charAt(_w.length-2) + _w.charAt(_w.length-1);
         setWalletShow(_ws);
     }
     
-    const createUser = async (wll, usr) => {
-        let _usr = await cosmicrafts.saveUser(usr, wll);
-        let ourPlayer = { stoic: principals[0].identity.principal };
+    const createUser = async () => {
+        let _usr = await cosmicrafts.saveUser(username, principals[currentPrincipal].identity.principal, principals[currentPrincipal].accounts[0].address);
+        console.log("CREATED AND ALL", _usr, await cosmicrafts.getAllUsers());
+        let ourPlayer = { stoic: principals[currentPrincipal].identity.principal };
         let registration = {
             player: ourPlayer,
-            name: usr,
+            name: username,
         };
         console.log("REGISTER METASCORE", registration);
     }
@@ -291,8 +289,8 @@ export default function MainView(props) {
     }
 
     useEffect (() => {
-        if(principals[0] !== undefined && principals[0] !== null && principals[0].identity !== undefined && route !== 'maintenance' && username !== ""){
-            createUser(principals[currentPrincipal].identity.principal, username);
+        if(principals[0] !== undefined && principals[currentPrincipal] !== null && principals[currentPrincipal].identity !== undefined && route !== 'maintenance' && username !== ""){
+            createUser();
             walletChars();
             loadSection("logged");
             redirectCC();
@@ -323,7 +321,16 @@ export default function MainView(props) {
         myGameActor.addPlayer(registration).then((value) => console.log("value:", value));
         window.location.href = "https://cosmicrafts.com/?usr=" + username + "&wlt=" + principals[currentPrincipal].identity.principal;
         //goTo("game");
-      };
+    };
+
+    const goTo = (_section) => {
+        window.location.href = "/" + _section;
+    }
+
+    const checkSTC = async () => {
+        let _stc = await cosmicrafts.getScoreTokenCreated();
+        console.log(_stc);
+    };
 
     return (
         <div>

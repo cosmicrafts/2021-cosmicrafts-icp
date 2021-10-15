@@ -1,0 +1,60 @@
+type Token = 
+ service {
+   allHistory: () -> (vec OpRecord) query;
+   allowance: (text, text) -> (nat64) query;
+   approve: (text, nat64) -> (bool, text);
+   balanceOf: (text) -> (nat64) query;
+   burn: (text, nat64) -> (bool, text);
+   decimals: () -> (nat64) query;
+   getHistoryByAccount: (text) -> (opt vec OpRecord) query;
+   getHistoryByHash: (text) -> (opt OpRecord) query;
+   metadata: () -> (Metadata) query;
+   mint: (text, nat64) -> (bool, text);
+   name: () -> (text) query;
+   owner: () -> (text) query;
+   symbol: () -> (text) query;
+   totalSupply: () -> (nat64) query;
+   transfer: (text, nat64) -> (bool, text);
+   transferFrom: (text, text, nat64) -> (bool, text);
+   whoami: () -> (text);
+ };
+type Time = int;
+type Status = 
+ variant {
+   failed;
+   success;
+ };
+type Operation = 
+ variant {
+   approve;
+   burn;
+   init;
+   mint;
+   transfer;
+ };
+type OpRecord = 
+ record {
+   amount: nat64;
+   caller: text;
+   fee: opt nat64;
+   from: opt text;
+   hash: text;
+   index: nat;
+   memo: opt nat64;
+   op: Operation;
+   status: Status;
+   timestamp: Time;
+   to: opt text;
+ };
+type Metadata = 
+ record {
+   decimals: nat64;
+   fee: nat;
+   logo: text;
+   name: text;
+   owner: Account;
+   symbol: text;
+   totalSupply: nat64;
+ };
+type Account = record {hash: vec nat8;};
+service : (text, text, nat64, nat64) -> Token

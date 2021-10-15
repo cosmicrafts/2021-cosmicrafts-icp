@@ -16,6 +16,10 @@
         "dist/cosmicrafts_assets/"
       ],
       "type": "assets"
+    },
+    "score_token":{
+      "main": "src/score_token/score_token.mo",
+      "type": "motoko"
     }
   },
   "defaults": {

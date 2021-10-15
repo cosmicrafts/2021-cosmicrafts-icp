@@ -10,14 +10,16 @@ export const idlFactory = ({ IDL }) => {
   });
   const UserName = IDL.Text;
   const UserWallet = IDL.Text;
+  const UserId = IDL.Principal;
   const GamesPlayed = IDL.Nat;
   const UserName__1 = IDL.Text;
   const Level = IDL.Nat;
-  const ScoreCC__1 = IDL.Nat;
+  const ScoreCC__1 = IDL.Nat64;
   const UserWallet__1 = IDL.Text;
   const GamesWon = IDL.Nat;
   const Highscore__1 = IDL.Nat;
   const Users = IDL.Record({
+    'id' : UserId,
     'gamesPlayed' : GamesPlayed,
     'user' : UserName__1,
     'level' : Level,
@@ -38,24 +40,34 @@ export const idlFactory = ({ IDL }) => {
   });
   const Score = IDL.Tuple(Player__1, IDL.Nat);
   const Result = IDL.Variant({ 'ok' : IDL.Null, 'err' : IDL.Text });
-  const ScoreCC = IDL.Nat;
+  const ScoreCC = IDL.Nat64;
   const Highscore = IDL.Nat;
   const Metagame = IDL.Service({
     'addPlayer' : IDL.Func([PlayerRegister], [PlayerRegisterResponse], []),
     'checkUsernameAvailable' : IDL.Func([UserName], [IDL.Bool], ['query']),
-    'checkWalletExists' : IDL.Func([UserWallet], [IDL.Bool], ['query']),
+    'checkWalletExists' : IDL.Func(
+        [UserWallet, IDL.Text],
+        [IDL.Bool],
+        ['query'],
+      ),
     'getAllUsers' : IDL.Func([], [IDL.Vec(Users)], ['query']),
     'getInfosOfPlayer' : IDL.Func([Player], [PlayerInfosResponse], []),
-    'getUser' : IDL.Func([UserWallet], [IDL.Opt(Users)], ['query']),
+    'getScoreTokenCreated' : IDL.Func([], [IDL.Bool], ['query']),
+    'getUser' : IDL.Func([UserWallet, IDL.Text], [IDL.Opt(Users)], ['query']),
     'metascoreRegisterSelf' : IDL.Func([RegisterCallback], [], []),
     'metascoreScores' : IDL.Func([], [IDL.Vec(Score)], ['query']),
     'register' : IDL.Func([], [Result], []),
-    'saveUser' : IDL.Func([UserName, UserWallet], [IDL.Opt(Users)], []),
+    'saveUser' : IDL.Func(
+        [UserName, IDL.Text, UserWallet],
+        [IDL.Opt(Users)],
+        [],
+      ),
     'saveUserScore' : IDL.Func(
-        [UserWallet, ScoreCC, Highscore],
+        [UserWallet, IDL.Text, ScoreCC, Highscore],
         [IDL.Bool],
         [],
       ),
+    'setScoreTokenCreated' : IDL.Func([], [IDL.Bool], []),
     'testBasic' : IDL.Func([], [IDL.Bool], []),
     'testPlayer' : IDL.Func([Player], [IDL.Bool], []),
   });
