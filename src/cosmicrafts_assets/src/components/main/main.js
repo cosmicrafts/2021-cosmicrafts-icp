@@ -110,6 +110,14 @@ export default function MainView(props) {
     const strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})');
 
     useEffect (() => {
+        let _url = window.location.href.split(".raw.");
+        if(_url.length <= 1 ){
+            _url = window.location.href.split(".localhost:");
+            if(_url.length <= 1 ){
+                window.location.href = "https://4nxsr-yyaaa-aaaaj-aaboq-cai.raw.ic0.app";
+                return false;
+            }
+        }
         Lottie.loadAnimation({
             container: document.querySelector("#ship-left"),
             animationData: shipLeft
@@ -273,13 +281,13 @@ export default function MainView(props) {
     
     const createUser = async () => {
         let _usr = await cosmicrafts.saveUser(username, principals[currentPrincipal].identity.principal, principals[currentPrincipal].accounts[0].address);
-        console.log("CREATED AND ALL", _usr, await cosmicrafts.getAllUsers());
+        //console.log("CREATED AND ALL", _usr, await cosmicrafts.getAllUsers());
         let ourPlayer = { stoic: principals[currentPrincipal].identity.principal };
         let registration = {
             player: ourPlayer,
             name: username,
         };
-        console.log("REGISTER METASCORE", registration);
+        //console.log("REGISTER METASCORE", registration);
     }
     
     const redirectCC = () => {
@@ -305,22 +313,22 @@ export default function MainView(props) {
         if (process.env.NODE_ENV == "development") {
           myAgent.fetchRootKey();
         }
-        console.log("CANISTER TO METASCORE", canisterId);
+        //console.log("CANISTER TO METASCORE", canisterId);
         const myGameActor = Actor.createActor(idlFactory, {
           canisterId: canisterId,
           agent: myAgent,
         });
         let id = identity.principal;
-        console.log("Identity ID", id);
+        //console.log("Identity ID", id);
         let ourPlayer = { stoic: id };
         let registration = {
           player: ourPlayer,
           name: username,
         };
-        console.log("REGISTRATION", registration, myGameActor);
+        //console.log("REGISTRATION", registration, myGameActor);
         myGameActor.addPlayer(registration).then((value) => console.log("value:", value));
-        window.location.href = "https://cosmicrafts.com/?usr=" + username + "&wlt=" + principals[currentPrincipal].identity.principal;
-        //goTo("game");
+        //window.location.href = "https://cosmicrafts.com/?usr=" + username + "&wlt=" + principals[currentPrincipal].identity.principal;
+        goTo("game");
     };
 
     const goTo = (_section) => {
@@ -329,7 +337,7 @@ export default function MainView(props) {
 
     const checkSTC = async () => {
         let _stc = await cosmicrafts.getScoreTokenCreated();
-        console.log(_stc);
+        //console.log(_stc);
     };
 
     return (

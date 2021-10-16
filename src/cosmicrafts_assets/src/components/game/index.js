@@ -18,9 +18,9 @@ const App = () => {
     const [prog, setProg] = useState(0);
 
     const getAllData = async (addr) => {
-        console.log("PRIN", principals);
+        console.log("USR", principals[currentPrincipal].accounts[0].address, addr);
         let allUsers = await cosmicrafts.getAllUsers();
-        console.log("ALL USERS", allUsers);
+        //console.log("ALL USERS", allUsers);
         let data = await cosmicrafts.getUser(principals[currentPrincipal].accounts[0].address, addr);
         if(data.length >= 1){
             let _usr = {
@@ -29,8 +29,8 @@ const App = () => {
             };
             setUser(_usr);
         } else {
-            //window.location.href = "/";
-            console.log("YOU WILL BE REDIRECTED", data);
+            window.location.href = "/";
+            //console.log("YOU WILL BE REDIRECTED", data);
         }
     };
 
@@ -41,10 +41,10 @@ const App = () => {
             let _highscore = parseInt(data[0].highscore);
             _highscore = (_highscore < score) ? score : _highscore;
             let allUsers = await cosmicrafts.getAllUsers();
-            console.log("ALL BEFORE MINT", allUsers);
+            console.log("TOKENS");
             let saved = await cosmicrafts.saveUserScore(principals[currentPrincipal].accounts[0].address, addr, score, _highscore);
             allUsers = await cosmicrafts.getAllUsers();
-            console.log("ALL AFTER MINT", allUsers, saved);
+            console.log("SCORE TOKEN", saved);
             /*console.log("mint");
             let minted = await score_token.mint(principals[currentPrincipal].accounts[0].address, score);
             let totalScore = await score_token.balanceOf(principals[currentPrincipal].accounts[0].address);
@@ -68,7 +68,17 @@ const App = () => {
         setProg(progression);
     });
 
+    unityContent.on("error", function (message) { console.log(message); });
+
     useEffect (() => {
+        let _url = window.location.href.split(".raw.");
+        if(_url.length <= 1 ){
+            _url = window.location.href.split(".localhost:");
+            if(_url.length <= 1 ){
+                window.location.href = "https://4nxsr-yyaaa-aaaaj-aaboq-cai.raw.ic0.app/game";
+                return false;
+            }
+        }
         console.log("START LOADING");
         if(principals[0] !== undefined && principals[0] !== null && principals[0].identity !== undefined){
             getAllData(principals[currentPrincipal].identity.principal);
@@ -79,7 +89,7 @@ const App = () => {
 
     return (
         <div>
-            {isLoading === true && <div>{`This is a Pre-alpha version... Loading ${prog * 100} percent... Loading can take up to 2 minutes, we are working on improving this!`}</div>}
+            {isLoading === true && <div>{`This is a Pre-alpha version... Loading ${prog * 100} percent... We are working on improving this load time!`}</div>}
             <Unity unityContent={unityContent} />
         </div>
     );

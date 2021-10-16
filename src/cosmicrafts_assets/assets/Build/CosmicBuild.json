@@ -1,7 +1,7 @@
 {
 "companyName": "World Of Unreal",
 "productName": "Cosmicrafts",
-"productVersion": "v0.50",
+"productVersion": "v0.03",
 "dataUrl": "CosmicBuild.data.unityweb",
 "wasmCodeUrl": "CosmicBuild.wasm.code.unityweb",
 "wasmFrameworkUrl": "CosmicBuild.wasm.framework.unityweb",
