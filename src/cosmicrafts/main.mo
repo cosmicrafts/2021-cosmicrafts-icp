@@ -29,6 +29,9 @@ shared ({ caller = owner }) actor class Metagame() : async Metascore.GameInterfa
     type Level = Types.Level;
     type GamesPlayed = Types.GamesPlayed;
     type GamesWon = Types.GamesWon;
+    type GameMatch = Types.GameMatch;
+    type GameID = Types.GameID;
+    type GameStatus = Types.GameStatus;
 
     let scoreToken : Token.Token = actor("avnm2-3aaaa-aaaaj-qacba-cai"); // IC
     //let scoreToken : Token.Token = actor("ryjl3-tyaaa-aaaaa-aaaba-cai"); // Local
@@ -36,6 +39,16 @@ shared ({ caller = owner }) actor class Metagame() : async Metascore.GameInterfa
     stable var users : [Users] = [];
     stable var scoreTokenCreated : Bool = false;
     //stable var counter : Int = 0;
+
+    func _GameEqual (a : GameID, b : GameID) : Bool {
+        Principal.equal(a, b);
+    };
+
+    func _GameHash (a : GameID) : Hash.Hash {
+        Principal.hash(a);
+    };
+    private stable var _gamesProgress : [(GameID, GameStatus)] = [];
+    var gamesInProgress : HashMap.HashMap<GameID, GameStatus> = HashMap.fromIter(_gamesProgress.vals(), 0, _GameEqual, _GameHash);
 
     public func saveUser(name : UserName, uId : Text,  wll : UserWallet) : async ?Users {
         let userId : Principal = Principal.fromText(uId);
@@ -171,6 +184,25 @@ shared ({ caller = owner }) actor class Metagame() : async Metascore.GameInterfa
                 return true;
             };
         }
+    };
+
+    public func createGame(_p1: Text, _p2: Text) : async Principal {
+        let _status : Text = "";
+        let _p1H : Principal = Principal.fromText(_p1);
+        if(gamesInProgress.get(_p1H) == null){
+            gamesInProgress.put(_p1H, _status);
+        };
+        return _p1H;
+    };
+
+    public func setGameInProgressData(_status: GameStatus, idMatch: Text) : async Bool {
+        let _id : Principal = Principal.fromText(idMatch);
+        if(gamesInProgress.get(_id) == null){
+            return false
+        } else {
+            let _gs : ?GameStatus = gamesInProgress.replace(_id, _status);
+            return true;
+        };
     };
 
     func get_user(usr: Users) : ?Users {

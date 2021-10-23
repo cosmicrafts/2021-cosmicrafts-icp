@@ -11,6 +11,8 @@ module {
     public type Level = Nat;
     public type GamesPlayed = Nat;
     public type GamesWon = Nat;
+    public type GameID = Principal;
+    public type GameStatus = Text;
 
     public type Users = {
         id: UserId;
@@ -21,5 +23,12 @@ module {
         level: Level;
         gamesPlayed: GamesPlayed;
         gamesWon: GamesWon;
+    };
+
+    public type GameMatch = {
+        id: Nat;
+        player2: UserId;
+        player1: UserId;
+        status: Text;
     };
 }

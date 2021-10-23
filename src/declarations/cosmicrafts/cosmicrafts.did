@@ -63,6 +63,7 @@ type Metagame =
    addPlayer: (PlayerRegister) -> (PlayerRegisterResponse);
    checkUsernameAvailable: (UserName) -> (bool) query;
    checkWalletExists: (UserWallet, text) -> (bool) query;
+   createGame: (text, text) -> (principal);
    getAllUsers: () -> (vec Users) query;
    getInfosOfPlayer: (Player) -> (PlayerInfosResponse);
    getScoreTokenCreated: () -> (bool) query;
@@ -72,6 +73,7 @@ type Metagame =
    register: () -> (Result);
    saveUser: (UserName, text, UserWallet) -> (opt Users);
    saveUserScore: (UserWallet, text, ScoreCC, Highscore) -> (bool);
+   setGameInProgressData: (GameStatus, text) -> (bool);
    setScoreTokenCreated: () -> (bool);
    testBasic: () -> (bool);
    testPlayer: (Player) -> (bool);
@@ -82,4 +84,5 @@ type Highscore__1 = nat;
 type Highscore = nat;
 type GamesWon = nat;
 type GamesPlayed = nat;
+type GameStatus = text;
 service : () -> Metagame

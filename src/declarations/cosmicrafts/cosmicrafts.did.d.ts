@@ -1,4 +1,5 @@
 import type { Principal } from '@dfinity/principal';
+export type GameStatus = string;
 export type GamesPlayed = bigint;
 export type GamesWon = bigint;
 export type Highscore = bigint;
@@ -9,6 +10,7 @@ export interface Metagame {
   'addPlayer' : (arg_0: PlayerRegister) => Promise<PlayerRegisterResponse>,
   'checkUsernameAvailable' : (arg_0: UserName) => Promise<boolean>,
   'checkWalletExists' : (arg_0: UserWallet, arg_1: string) => Promise<boolean>,
+  'createGame' : (arg_0: string, arg_1: string) => Promise<Principal>,
   'getAllUsers' : () => Promise<Array<Users>>,
   'getInfosOfPlayer' : (arg_0: Player) => Promise<PlayerInfosResponse>,
   'getScoreTokenCreated' : () => Promise<boolean>,
@@ -25,6 +27,9 @@ export interface Metagame {
       arg_2: ScoreCC,
       arg_3: Highscore,
     ) => Promise<boolean>,
+  'setGameInProgressData' : (arg_0: GameStatus, arg_1: string) => Promise<
+      boolean
+    >,
   'setScoreTokenCreated' : () => Promise<boolean>,
   'testBasic' : () => Promise<boolean>,
   'testPlayer' : (arg_0: Player) => Promise<boolean>,

@@ -42,6 +42,7 @@ export const idlFactory = ({ IDL }) => {
   const Result = IDL.Variant({ 'ok' : IDL.Null, 'err' : IDL.Text });
   const ScoreCC = IDL.Nat64;
   const Highscore = IDL.Nat;
+  const GameStatus = IDL.Text;
   const Metagame = IDL.Service({
     'addPlayer' : IDL.Func([PlayerRegister], [PlayerRegisterResponse], []),
     'checkUsernameAvailable' : IDL.Func([UserName], [IDL.Bool], ['query']),
@@ -50,6 +51,7 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Bool],
         ['query'],
       ),
+    'createGame' : IDL.Func([IDL.Text, IDL.Text], [IDL.Principal], []),
     'getAllUsers' : IDL.Func([], [IDL.Vec(Users)], ['query']),
     'getInfosOfPlayer' : IDL.Func([Player], [PlayerInfosResponse], []),
     'getScoreTokenCreated' : IDL.Func([], [IDL.Bool], ['query']),
@@ -67,6 +69,7 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Bool],
         [],
       ),
+    'setGameInProgressData' : IDL.Func([GameStatus, IDL.Text], [IDL.Bool], []),
     'setScoreTokenCreated' : IDL.Func([], [IDL.Bool], []),
     'testBasic' : IDL.Func([], [IDL.Bool], []),
     'testPlayer' : IDL.Func([Player], [IDL.Bool], []),

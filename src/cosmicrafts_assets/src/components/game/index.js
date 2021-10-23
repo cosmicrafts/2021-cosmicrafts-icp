@@ -16,6 +16,7 @@ const App = () => {
     const [user, setUser] = useState({ "WalletId": "NOT-LOADED", "NikeName": "PLAYER 007"});
     const [isLoading, setIsLoading] = useState(true);
     const [prog, setProg] = useState(0);
+    const [game, setGame] = useState(0);
 
     const getAllData = async (addr) => {
         console.log("USR", principals[currentPrincipal].accounts[0].address, addr);
@@ -58,10 +59,20 @@ const App = () => {
         console.log("LOADED");
         unityContent.send("Dashboard", "SetPlayerData", JSON.stringify(user));
         setIsLoading(false);
+        createGame();
     });
 
     unityContent.on("SaveScore", (score) => {
         saveScore(score);
+    });
+
+    unityContent.on("gameStart", (matchPlayers) => {
+        console.log(matchPlayers);
+    });
+
+    unityContent.on("SendJson", (gameStatus) => {
+        console.log("GAME STATUS:", gameStatus);
+        setGameStatus(gameStatus);
     });
 
     unityContent.on("progress", (progression) => {
@@ -86,6 +97,23 @@ const App = () => {
             window.location.href = "/";
         }
     }, []);
+
+
+    const createGame = async () => {
+        let player_principal = principals[currentPrincipal].identity.principal;
+        console.log("PLAYER PRINCIPAL:", player_principal);
+        let _game = await cosmicrafts.createGame(player_principal, player_principal);
+        console.log("GAME CREATED: ", _game);
+        setGame(principals[currentPrincipal].identity.principal);
+    };
+
+    const setGameStatus = async (jsn) => {
+        var _today = new Date(); 
+        console.log("SEND ", _today, jsn);
+        let _game = await cosmicrafts.setGameInProgressData(jsn, game);
+        var _today2 = new Date(); 
+        console.log("GAME PROGRESS SAVED:", _today, _today2, _game);
+    }
 
     return (
         <div>
