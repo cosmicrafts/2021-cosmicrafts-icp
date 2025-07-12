@@ -6,7 +6,7 @@ import Header from "../header/header";
 import Lottie from "lottie-web";
 import { NavLink } from 'react-router-dom';
 
-import { idlFactory } from "../../../../declarations/cosmicrafts/cosmicrafts.did.js";
+import { idlFactory } from "../../../../declarations/cosmicrafts/service.did.js";
 import { HttpAgent } from "@dfinity/agent";
 import { Actor } from "@dfinity/agent";
 import { canisterId } from "../../../../declarations/cosmicrafts/index.js";

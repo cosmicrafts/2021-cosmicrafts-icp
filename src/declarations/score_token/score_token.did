@@ -1,21 +1,45 @@
 type Token = 
  service {
+   /// Get all update call history.
    allHistory: () -> (vec OpRecord) query;
-   allowance: (text, text) -> (nat64) query;
-   approve: (text, nat64) -> (bool, text);
-   balanceOf: (text) -> (nat64) query;
-   burn: (text, nat64) -> (bool, text);
+   /// Get the amount which `spender` is still allowed to withdraw from `owner`, in the number of minimum units. 
+   allowance: (owner: text, spender: text) -> (nat64) query;
+   /// Allows `spender` to withdraw from your account multiple times, up to the `value` amount. 
+   /// If this function is called again it overwrites the current allowance with value.
+   /// `value` is the number of minimum units.    
+   /// the `value` of `approve` is has **nothing** to do with your `balance`     
+   /// Return whether the result is successful and transaction hash.
+   approve: (spender: text, value: nat64) -> (bool, text);
+   /// Get the balance of Account `who`, in the number of minimum units. 
+   balanceOf: (who: text) -> (nat64) query;
+   /// Burn `value` tokens of Account `to`, decreasing the total supply.     
+   /// Return whether the result is successful and transaction hash.
+   burn: (from: text, value: nat64) -> (bool, text);
+   /// Get the number of decimals the token uses.
    decimals: () -> (nat64) query;
-   getHistoryByAccount: (text) -> (opt vec OpRecord) query;
-   getHistoryByHash: (text) -> (opt OpRecord) query;
+   /// Get update call history by account.
+   getHistoryByAccount: (a: text) -> (opt vec OpRecord) query;
+   /// Get update call History index by hash.
+   getHistoryByHash: (hash: text) -> (opt OpRecord) query;
    metadata: () -> (Metadata) query;
-   mint: (text, nat64) -> (bool, text);
+   /// Creates `value` tokens and assigns them to Account `to`, increasing the total supply.
+   /// Return whether the result is successful and transaction hash.
+   mint: (to: text, value: nat64) -> (bool, text);
+   /// Get the name of the token.
    name: () -> (text) query;
+   /// Get the owner of the token.
    owner: () -> (text) query;
+   /// Get the symbol of the token.
    symbol: () -> (text) query;
+   /// Get the total token supply, in the number of minimum units.
    totalSupply: () -> (nat64) query;
-   transfer: (text, nat64) -> (bool, text);
-   transferFrom: (text, text, nat64) -> (bool, text);
+   /// Transfers `value` amount of tokens to Account `to`. `value` is the number of minimum units.   
+   /// Return whether the result is successful and transaction hash.
+   transfer: (to: text, value: nat64) -> (bool, text);
+   /// Transfers `value` amount of tokens from Account `from` to Account `to`. `value` is the number of minimum units.     
+   /// Return whether the result is successful and transaction hash.
+   transferFrom: (from: text, to: text, value: nat64) -> (bool, text);
+   /// Get the caller's Account.
    whoami: () -> (text);
  };
 type Time = int;
@@ -57,4 +81,13 @@ type Metadata =
    totalSupply: nat64;
  };
 type Account = record {hash: vec nat8;};
-service : (text, text, nat64, nat64) -> Token
+/// Motoko ERC20 Token
+/// 
+/// Features: 
+/// 1. [ERC20 standard interface](https://eips.ethereum.org/EIPS/eip-20), easy to understand and concise.   
+/// 2. It supports [Account Identifier](https://github.com/dfinity/ic/blob/master/rs/rosetta-api/ledger_canister/src/account_identifier.rs#L24), which is the same as the one used by Ledger canister, 
+/// E.g: `a3a6b204465c2f53c60ae18f5761acbd868b7705f888ccc2955eabbb5942d991`.
+/// 3. It supports querying all history records, all history records of an account, history record of a transaction hash.
+/// Init token with `_name`, `_symbol`, `_decimals`, `_totalSupply`. 
+/// `_totalSupply` is the number of minimum units.
+service : (_name: text, _symbol: text, _decimals: nat64, _totalSupply: nat64) -> Token

@@ -1,0 +1,53 @@
+type GameStatus = text;
+type GamesPlayed = nat;
+type GamesWon = nat;
+type Highscore = nat;
+type Level = nat;
+type Metadata = record { name : text };
+type Metagame = service {
+  addPlayer : (PlayerRegister) -> (PlayerRegisterResponse);
+  checkUsernameAvailable : (UserName) -> (bool) query;
+  checkWalletExists : (UserWallet, text) -> (bool) query;
+  createGame : (text, text) -> (principal);
+  getAllUsers : () -> (vec Users) query;
+  getInfosOfPlayer : (Player) -> (PlayerInfosResponse);
+  getScoreTokenCreated : () -> (bool) query;
+  getUser : (UserWallet, text) -> (opt Users) query;
+  metascoreRegisterSelf : (RegisterCallback) -> ();
+  metascoreScores : () -> (vec Score) query;
+  register : () -> (Result);
+  saveUser : (UserName, text, UserWallet) -> (opt Users);
+  saveUserScore : (UserWallet, text, ScoreCC, Highscore) -> (bool);
+  setGameInProgressData : (GameStatus, text) -> (bool);
+  setScoreTokenCreated : () -> (bool);
+  testBasic : () -> (bool);
+  testPlayer : (Player) -> (bool);
+};
+type Player = variant { plug : principal; stoic : principal };
+type PlayerInfosResponse = variant {
+  ok : text;
+  err : variant { NotFound; Unknown };
+};
+type PlayerRegister = record { player : Player; name : text };
+type PlayerRegisterResponse = variant {
+  ok;
+  err : variant { AlreadyExist; Unknown };
+};
+type RegisterCallback = func (Metadata) -> ();
+type Result = variant { ok; err : text };
+type Score = record { Player; nat };
+type ScoreCC = nat64;
+type UserId = principal;
+type UserName = text;
+type UserWallet = text;
+type Users = record {
+  id : UserId;
+  gamesPlayed : GamesPlayed;
+  user : UserName;
+  level : Level;
+  score : ScoreCC;
+  wallet : UserWallet;
+  gamesWon : GamesWon;
+  highscore : Highscore;
+};
+service : Metagame

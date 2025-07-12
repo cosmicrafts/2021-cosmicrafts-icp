@@ -1,0 +1,46 @@
+type Account = record { hash : blob };
+type Metadata = record {
+  fee : nat;
+  decimals : nat64;
+  owner : Account;
+  logo : text;
+  name : text;
+  totalSupply : nat64;
+  symbol : text;
+};
+type OpRecord = record {
+  op : Operation;
+  to : opt text;
+  fee : opt nat64;
+  status : Status;
+  from : opt text;
+  hash : text;
+  memo : opt nat64;
+  timestamp : Time;
+  caller : text;
+  index : nat;
+  amount : nat64;
+};
+type Operation = variant { burn; init; mint; approve; transfer };
+type Status = variant { success; failed };
+type Time = int;
+type Token = service {
+  allHistory : () -> (vec OpRecord) query;
+  allowance : (text, text) -> (nat64) query;
+  approve : (text, nat64) -> (bool, text);
+  balanceOf : (text) -> (nat64) query;
+  burn : (text, nat64) -> (bool, text);
+  decimals : () -> (nat64) query;
+  getHistoryByAccount : (text) -> (opt vec OpRecord) query;
+  getHistoryByHash : (text) -> (opt OpRecord) query;
+  metadata : () -> (Metadata) query;
+  mint : (text, nat64) -> (bool, text);
+  name : () -> (text) query;
+  owner : () -> (text) query;
+  symbol : () -> (text) query;
+  totalSupply : () -> (nat64) query;
+  transfer : (text, nat64) -> (bool, text);
+  transferFrom : (text, text, nat64) -> (bool, text);
+  whoami : () -> (text);
+};
+service : Token

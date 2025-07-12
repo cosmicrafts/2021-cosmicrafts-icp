@@ -1,0 +1,36 @@
+// Version: 1.0.0
+type GameID__547065689 = GameID__714178005;
+type GameID__714178005 = Principal;
+type GameStatus__473261782 = Text;
+type GameStatus__890161912 = GameStatus__473261782;
+type GamesPlayed__669117009 = Nat;
+type GamesWon__189815170 = Nat;
+type Highscore__671819788 = Nat;
+type Level__227385967 = Nat;
+type PlayerInfo__314486325 = {name : Text};
+type Player__587891387 = {#plug : Principal; #stoic : Principal};
+type Player__985992029 = {#plug : Principal; #stoic : Principal};
+type ScoreCC__823546802 = Nat64;
+type Score__541037231 = (Player__587891387, Nat);
+type UserId__87148178 = Principal;
+type UserName__348019791 = Text;
+type UserWallet__65835033 = Text;
+type Users__493246215 = Users__59063314;
+type Users__59063314 =
+  {
+    gamesPlayed : GamesPlayed__669117009;
+    gamesWon : GamesWon__189815170;
+    highscore : Highscore__671819788;
+    id : UserId__87148178;
+    level : Level__227385967;
+    score : ScoreCC__823546802;
+    user : UserName__348019791;
+    wallet : UserWallet__65835033
+  };
+actor {
+  stable var _gamesProgress : [(GameID__547065689, GameStatus__890161912)];
+  stable var playersEntries : [(Player__985992029, PlayerInfo__314486325)];
+  stable var scoreTokenCreated : Bool;
+  stable var scores : [Score__541037231];
+  stable var users : [Users__493246215]
+};

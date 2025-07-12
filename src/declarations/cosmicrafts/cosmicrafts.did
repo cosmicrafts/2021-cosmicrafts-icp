@@ -2,23 +2,20 @@ type Users =
  record {
    gamesPlayed: GamesPlayed;
    gamesWon: GamesWon;
-   highscore: Highscore__1;
+   highscore: Highscore;
    id: UserId;
    level: Level;
-   score: ScoreCC__1;
-   user: UserName__1;
-   wallet: UserWallet__1;
+   score: ScoreCC;
+   user: UserName;
+   wallet: UserWallet;
  };
-type UserWallet__1 = text;
 type UserWallet = text;
-type UserName__1 = text;
 type UserName = text;
 type UserId = principal;
-type ScoreCC__1 = nat64;
 type ScoreCC = nat64;
 type Score = 
  record {
-   Player__1;
+   Player;
    nat;
  };
 type Result = 
@@ -26,12 +23,7 @@ type Result =
    err: text;
    ok;
  };
-type RegisterCallback = func (Metadata) -> ();
-type Player__1 = 
- variant {
-   plug: principal;
-   stoic: principal;
- };
+type RegisterCallback = func (metadata: Metadata) -> ();
 type PlayerRegisterResponse = 
  variant {
    err: variant {
@@ -60,27 +52,27 @@ type Player =
  };
 type Metagame = 
  service {
-   addPlayer: (PlayerRegister) -> (PlayerRegisterResponse);
-   checkUsernameAvailable: (UserName) -> (bool) query;
-   checkWalletExists: (UserWallet, text) -> (bool) query;
-   createGame: (text, text) -> (principal);
+   addPlayer: (registration: PlayerRegister) -> (PlayerRegisterResponse);
+   checkUsernameAvailable: (name: UserName) -> (bool) query;
+   checkWalletExists: (wll: UserWallet, uId: text) -> (bool) query;
+   createGame: (_p1: text, _p2: text) -> (principal);
    getAllUsers: () -> (vec Users) query;
-   getInfosOfPlayer: (Player) -> (PlayerInfosResponse);
+   getInfosOfPlayer: (player: Player) -> (PlayerInfosResponse);
    getScoreTokenCreated: () -> (bool) query;
-   getUser: (UserWallet, text) -> (opt Users) query;
-   metascoreRegisterSelf: (RegisterCallback) -> ();
+   getUser: (wll: UserWallet, uId: text) -> (opt Users) query;
+   metascoreRegisterSelf: (callback: RegisterCallback) -> ();
    metascoreScores: () -> (vec Score) query;
    register: () -> (Result);
-   saveUser: (UserName, text, UserWallet) -> (opt Users);
-   saveUserScore: (UserWallet, text, ScoreCC, Highscore) -> (bool);
-   setGameInProgressData: (GameStatus, text) -> (bool);
+   saveUser: (name: UserName, uId: text, wll: UserWallet) -> (opt Users);
+   saveUserScore: (wll: UserWallet, uId: text, scr: ScoreCC, hscr:
+    Highscore) -> (bool);
+   setGameInProgressData: (_status: GameStatus, idMatch: text) -> (bool);
    setScoreTokenCreated: () -> (bool);
    testBasic: () -> (bool);
-   testPlayer: (Player) -> (bool);
+   testPlayer: (player: Player) -> (bool);
  };
 type Metadata = record {name: text;};
 type Level = nat;
-type Highscore__1 = nat;
 type Highscore = nat;
 type GamesWon = nat;
 type GamesPlayed = nat;

@@ -87,14 +87,6 @@ module.exports = {
       template: path.join(__dirname, asset_entry),
       cache: false
     }),
-    new CopyPlugin({
-      patterns: [
-        {
-          from: path.join(__dirname, "src", "cosmicrafts_assets", "assets"),
-          to: path.join(__dirname, "dist", "cosmicrafts_assets"),
-        },
-      ],
-    }),
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
       COSMICRAFTS_CANISTER_ID: canisters["cosmicrafts"]

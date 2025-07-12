@@ -1,0 +1,4 @@
+[dependencies]
+base = "0.14.9"
+metascore = "https://github.com/metascore/metascore#v0.1.0"
+sha224 = "https://github.com/flyq/motoko-sha224#v0.1.0"
